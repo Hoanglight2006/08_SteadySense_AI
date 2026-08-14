@@ -1,0 +1,386 @@
+{
+  "schema_version": "steadysense.onedrive-foundations.v1",
+  "generated_on": "2026-08-13",
+  "text_copy_policy": "UTF-8 text imported with line endings normalized by apply_patch",
+  "all_normalized_text_equal": true,
+  "files": [
+    {
+      "group": "P1 Android gateway",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\edge_context_ai_research\\01_self_supervised_context_encoder\\android_gateway_app\\build.gradle.kts",
+      "destination_path": "source_code/from_p1_android_gateway/build.gradle.kts",
+      "size_bytes": 208,
+      "source_sha256": "D2679D37D2F91981D86C0977894099C98565F62BBFF702D5EAF63F64EAE44A5B",
+      "destination_sha256": "B336DAADD9F3672E34783E4C4744011DB7893BD8EC3E35DF976AC8768D4A4B7D",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "P1 Android gateway",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\edge_context_ai_research\\01_self_supervised_context_encoder\\android_gateway_app\\gradle.properties",
+      "destination_path": "source_code/from_p1_android_gateway/gradle.properties",
+      "size_bytes": 59,
+      "source_sha256": "9D42831545922C72B0C263331A5A5E4E087AC9CA74DE6B63D299305EE1095DF8",
+      "destination_sha256": "7468C7B65EFFD7FB6A5504AA63FBF21EE6ACB1C68A41AD6FFB14EFF9B51E7EC9",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "P1 Android gateway",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\edge_context_ai_research\\01_self_supervised_context_encoder\\android_gateway_app\\README.md",
+      "destination_path": "source_code/from_p1_android_gateway/README.md",
+      "size_bytes": 3312,
+      "source_sha256": "DE2F7A56700DA35367A3BF9DAA4F224FE6EB213042AAACB65024D8B8C3D1B423",
+      "destination_sha256": "F986FB79A6C4D30C6A0B16D88AF2A6726C1AE6878CCBED25B1DB5CD61BD4E1AB",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "P1 Android gateway",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\edge_context_ai_research\\01_self_supervised_context_encoder\\android_gateway_app\\settings.gradle.kts",
+      "destination_path": "source_code/from_p1_android_gateway/settings.gradle.kts",
+      "size_bytes": 357,
+      "source_sha256": "8FD3325686B91BE16DC16B96CAB85B7A29B04CDC5546FF44032C155273001707",
+      "destination_sha256": "DE2EE4B085CC4C8D2244C6BC2DAE2D0BFFA796B9DD901748270C03A14D155026",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "P1 Android gateway",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\edge_context_ai_research\\01_self_supervised_context_encoder\\android_gateway_app\\phone\\build.gradle.kts",
+      "destination_path": "source_code/from_p1_android_gateway/phone/build.gradle.kts",
+      "size_bytes": 1019,
+      "source_sha256": "C0BDE95D709E6EE6D9551129F86B5A55656D359577005CD2BFE5CF432C4BAE9A",
+      "destination_sha256": "0DE8544C763307223A028DF767EB81FE41A9C168A1ABEB6EB9B0EA239041B028",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "P1 Android gateway",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\edge_context_ai_research\\01_self_supervised_context_encoder\\android_gateway_app\\phone\\src\\main\\AndroidManifest.xml",
+      "destination_path": "source_code/from_p1_android_gateway/phone/src/main/AndroidManifest.xml",
+      "size_bytes": 1010,
+      "source_sha256": "A878D3EC0CD98F9970A081BC7A933EF3AAFB6EA732C94A6CFC97CA64071C6EB6",
+      "destination_sha256": "A8611C820772F5BC09234E4D88657DEB2C836A9C1F35148235B9E614DEBA1673",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "P1 Android gateway",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\edge_context_ai_research\\01_self_supervised_context_encoder\\android_gateway_app\\phone\\src\\main\\java\\com\\edgecontext\\gateway\\phone\\AppDatabase.kt",
+      "destination_path": "source_code/from_p1_android_gateway/phone/src/main/java/com/edgecontext/gateway/phone/AppDatabase.kt",
+      "size_bytes": 781,
+      "source_sha256": "0828BB05B8978B8019376700F071A22FFE15A686845ABAC20454CE2A1D8C25D9",
+      "destination_sha256": "D2E304A69CDAA8D328B2A4AF099588EE795CA965C42923B29A3D854ACEBE43F5",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "P1 Android gateway",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\edge_context_ai_research\\01_self_supervised_context_encoder\\android_gateway_app\\phone\\src\\main\\java\\com\\edgecontext\\gateway\\phone\\CollectionMetadata.kt",
+      "destination_path": "source_code/from_p1_android_gateway/phone/src/main/java/com/edgecontext/gateway/phone/CollectionMetadata.kt",
+      "size_bytes": 177,
+      "source_sha256": "B493BF338C6FEA058FD249B2850EEA7144739AF8AA62CCE439D4390923685B80",
+      "destination_sha256": "AEEE05236DBD7B5B010DD510AB185CD67A2519E5F9F50BF965DD7870DFCF1346",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "P1 Android gateway",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\edge_context_ai_research\\01_self_supervised_context_encoder\\android_gateway_app\\phone\\src\\main\\java\\com\\edgecontext\\gateway\\phone\\CsvExporter.kt",
+      "destination_path": "source_code/from_p1_android_gateway/phone/src/main/java/com/edgecontext/gateway/phone/CsvExporter.kt",
+      "size_bytes": 4337,
+      "source_sha256": "13B128A42A6E9C0F4B16B7127305828A3F751280D84907C56C1E2D2AFD392CB8",
+      "destination_sha256": "7BAE319BEBB52CE6AC5B3D03CAAD3950EB778A601CB16FBE0283C2D7CEE4B34A",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "P1 Android gateway",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\edge_context_ai_research\\01_self_supervised_context_encoder\\android_gateway_app\\phone\\src\\main\\java\\com\\edgecontext\\gateway\\phone\\MainActivity.kt",
+      "destination_path": "source_code/from_p1_android_gateway/phone/src/main/java/com/edgecontext/gateway/phone/MainActivity.kt",
+      "size_bytes": 10848,
+      "source_sha256": "C5849BDB6843B9673143CCCE2950483D7C88A0DA2391B9B33C3EEE76BB9D8E5A",
+      "destination_sha256": "C5849BDB6843B9673143CCCE2950483D7C88A0DA2391B9B33C3EEE76BB9D8E5A",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "P1 Android gateway",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\edge_context_ai_research\\01_self_supervised_context_encoder\\android_gateway_app\\phone\\src\\main\\java\\com\\edgecontext\\gateway\\phone\\PhoneSensorRecorder.kt",
+      "destination_path": "source_code/from_p1_android_gateway/phone/src/main/java/com/edgecontext/gateway/phone/PhoneSensorRecorder.kt",
+      "size_bytes": 2933,
+      "source_sha256": "843FD803B6AD4E19BD6E559052AF9307FDE612D8BB8D1C523E43CCD7D39CC51B",
+      "destination_sha256": "4FD9F8795C2F809DE1E6E2F5B4B0C6D103716F371F7000C26348FA77EDECFE72",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "P1 Android gateway",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\edge_context_ai_research\\01_self_supervised_context_encoder\\android_gateway_app\\phone\\src\\main\\java\\com\\edgecontext\\gateway\\phone\\SensorSampleDao.kt",
+      "destination_path": "source_code/from_p1_android_gateway/phone/src/main/java/com/edgecontext/gateway/phone/SensorSampleDao.kt",
+      "size_bytes": 689,
+      "source_sha256": "236F03319C35A3CD2CE94D9286AA3F93AA0C4A6564E0B65F0A37D1F60C7ACB7C",
+      "destination_sha256": "8E81AF75AFD0E2AC8F1E210423760457488794BE6738813150C306480DE7EAB8",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "P1 Android gateway",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\edge_context_ai_research\\01_self_supervised_context_encoder\\android_gateway_app\\phone\\src\\main\\java\\com\\edgecontext\\gateway\\phone\\SensorSampleEntity.kt",
+      "destination_path": "source_code/from_p1_android_gateway/phone/src/main/java/com/edgecontext/gateway/phone/SensorSampleEntity.kt",
+      "size_bytes": 606,
+      "source_sha256": "B60618394327BA9E25F331BF21E1ECFA73F97FFEB4EAC6DF3E30972A8B5C4E21",
+      "destination_sha256": "997922D08EAA8327F255B9809E89EE3EA62F5723510E1CADB019FEF6A29F17A0",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "P1 Android gateway",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\edge_context_ai_research\\01_self_supervised_context_encoder\\android_gateway_app\\phone\\src\\main\\java\\com\\edgecontext\\gateway\\phone\\WatchMessageService.kt",
+      "destination_path": "source_code/from_p1_android_gateway/phone/src/main/java/com/edgecontext/gateway/phone/WatchMessageService.kt",
+      "size_bytes": 1966,
+      "source_sha256": "56F13076FAF97CB520426E9BB3DD841E566F5D892483C7DAF425288EEBACAF10",
+      "destination_sha256": "30444649815D5CBD2089E0342D2E89880B6FF0CA43E840BE73B8CA8E3FF52526",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "P1 Android gateway",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\edge_context_ai_research\\01_self_supervised_context_encoder\\android_gateway_app\\wear\\build.gradle.kts",
+      "destination_path": "source_code/from_p1_android_gateway/wear/build.gradle.kts",
+      "size_bytes": 830,
+      "source_sha256": "081DC5DED00363B9CB4EB0D79E065EE91DC53A81D5280073550007F21768155E",
+      "destination_sha256": "1F4407821AC16F878F2DAEFCE5756ED3EB95331FE0287A54979B51AD23EDD3E2",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "P1 Android gateway",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\edge_context_ai_research\\01_self_supervised_context_encoder\\android_gateway_app\\wear\\src\\main\\AndroidManifest.xml",
+      "destination_path": "source_code/from_p1_android_gateway/wear/src/main/AndroidManifest.xml",
+      "size_bytes": 755,
+      "source_sha256": "DCC355E067252804F90B2403BE661A11891FD67B47EDE0353BA8A88E78C5FA2A",
+      "destination_sha256": "CBB798C94BBCD93436BDD09E8E1B76319EF475B3F7A03806ED5AE669E34197FA",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "P1 Android gateway",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\edge_context_ai_research\\01_self_supervised_context_encoder\\android_gateway_app\\wear\\src\\main\\java\\com\\edgecontext\\gateway\\wear\\MainActivity.kt",
+      "destination_path": "source_code/from_p1_android_gateway/wear/src/main/java/com/edgecontext/gateway/wear/MainActivity.kt",
+      "size_bytes": 3541,
+      "source_sha256": "FA012891157B7F7910972EEACC10533BFE4D55281EE37DFEE2447B252E1F24CB",
+      "destination_sha256": "0FCC27D41182C6F2EC87B2CBF754B069D28CE498ADDDAE03F27423E0FF01855A",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "P1 Android gateway",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\edge_context_ai_research\\01_self_supervised_context_encoder\\android_gateway_app\\wear\\src\\main\\java\\com\\edgecontext\\gateway\\wear\\WearMetadata.kt",
+      "destination_path": "source_code/from_p1_android_gateway/wear/src/main/java/com/edgecontext/gateway/wear/WearMetadata.kt",
+      "size_bytes": 180,
+      "source_sha256": "BC7B02D743597C73AB7CC8CFCB63272BDD31549D09ABA033DFBF87F8AD93577D",
+      "destination_sha256": "32507219EDCC3AD4AD5CE8FB22D18C142FAA194BA27E2B1649EE302DE6DBC3AD",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "P1 Android gateway",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\edge_context_ai_research\\01_self_supervised_context_encoder\\android_gateway_app\\wear\\src\\main\\java\\com\\edgecontext\\gateway\\wear\\WearSensorSender.kt",
+      "destination_path": "source_code/from_p1_android_gateway/wear/src/main/java/com/edgecontext/gateway/wear/WearSensorSender.kt",
+      "size_bytes": 3920,
+      "source_sha256": "8C9720A1894AD5D0E9D0917796D4B524A008B67A426B9DC1B0305E3787813842",
+      "destination_sha256": "11969AF7670706168435ED447EC0CE42A0991E92C1EE940A28D8978C5229C961",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "On_Hand Wear",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\On_Hand\\android_wear\\app\\build.gradle.kts",
+      "destination_path": "source_code/from_on_hand_wear/app/build.gradle.kts",
+      "size_bytes": 1063,
+      "source_sha256": "110EAFCC028959DB597137B52BAF07B30B5FD9FF6CC8E1F18661C51D87BAB045",
+      "destination_sha256": "589B4C38EB2BC63534BD5936A12A52F3171617915040B690395AD8F2B4E9C8B2",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "On_Hand Wear",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\On_Hand\\android_wear\\app\\src\\main\\kotlin\\vn\\edu\\uit\\tpkd\\wear\\IMUCollector.kt",
+      "destination_path": "source_code/from_on_hand_wear/app/src/main/kotlin/vn/edu/uit/tpkd/wear/IMUCollector.kt",
+      "size_bytes": 4156,
+      "source_sha256": "3A53FA0E87B7689C957EC66708C5AAC9A00EB4B503372A418F50E9F35B682597",
+      "destination_sha256": "EA3C8F7E176B9C573DBF4924FA9D300403B61050B21F0345A51CF796E6767719",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "On_Hand Wear",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\On_Hand\\android_wear\\app\\src\\main\\kotlin\\vn\\edu\\uit\\tpkd\\wear\\OrientationCorrector.kt",
+      "destination_path": "source_code/from_on_hand_wear/app/src/main/kotlin/vn/edu/uit/tpkd/wear/OrientationCorrector.kt",
+      "size_bytes": 5744,
+      "source_sha256": "AF512BFC0A045C59357300DFBA8D469C53B6A7B7B50954FED7EAFF2DD9EBE642",
+      "destination_sha256": "C476145612FCD22C00C105E84C98060E4E3331969732CD8884CF7B9FE6AE717B",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "On_Hand Wear",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\On_Hand\\android_wear\\app\\src\\main\\kotlin\\vn\\edu\\uit\\tpkd\\wear\\RawImuSessionLogger.kt",
+      "destination_path": "source_code/from_on_hand_wear/app/src/main/kotlin/vn/edu/uit/tpkd/wear/RawImuSessionLogger.kt",
+      "size_bytes": 4203,
+      "source_sha256": "654F00D39B19E70591517E8E77A68C81596D3C89F8120F438B0AA79A50F3C229",
+      "destination_sha256": "4F039340CAD063D718D26B8ED74A644085F3353BCD9FBB1BAA26533F8B55D23C",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "On_Hand Wear",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\On_Hand\\android_wear\\app\\src\\main\\kotlin\\vn\\edu\\uit\\tpkd\\wear\\UniformImuResampler.kt",
+      "destination_path": "source_code/from_on_hand_wear/app/src/main/kotlin/vn/edu/uit/tpkd/wear/UniformImuResampler.kt",
+      "size_bytes": 4377,
+      "source_sha256": "56E02E0FF60D343A99B218062983F6D7C8AC642AE2DAD754993655BC1CA8CE9F",
+      "destination_sha256": "1D2EE635783A3F46C36FDE7E6B04FB21BA3D3DB84C3F2E632A681871CAAD0F02",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "On_Hand Wear",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\On_Hand\\android_wear\\app\\src\\test\\kotlin\\vn\\edu\\uit\\tpkd\\wear\\OrientationCorrectorTest.kt",
+      "destination_path": "source_code/from_on_hand_wear/app/src/test/kotlin/vn/edu/uit/tpkd/wear/OrientationCorrectorTest.kt",
+      "size_bytes": 3583,
+      "source_sha256": "D2971B72FCE28134EBFD13ECDCCC344BA61B9F417FE8DD3A2A87FBCCEF67C043",
+      "destination_sha256": "076B514B8803F6A2012FABF8CFB400FE8A644A065F400DB674A0891331F3798D",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "On_Hand Wear",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\On_Hand\\android_wear\\app\\src\\test\\kotlin\\vn\\edu\\uit\\tpkd\\wear\\UniformImuResamplerTest.kt",
+      "destination_path": "source_code/from_on_hand_wear/app/src/test/kotlin/vn/edu/uit/tpkd/wear/UniformImuResamplerTest.kt",
+      "size_bytes": 2861,
+      "source_sha256": "8D7FF7A02445BD4CE286CC7F09ACE736F3F88E847DDAAFCC957220CF52A3D4F1",
+      "destination_sha256": "15221BCDFDEEF6658C84DA02D4FDEC87B6BA4EC25365224F5EF95234D701A921",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "ViDroid elderly UI",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\QLSV_NCKH\\03_ViDroid_Assistant_Dataset_Tool\\LICENSE",
+      "destination_path": "source_code/from_vidroid_elderly_ui/LICENSE",
+      "size_bytes": 10910,
+      "source_sha256": "B1ABC6C7445D30DD287D190DEE1C84714FC0C1C2EDE8BBFF0D691D9572621D33",
+      "destination_sha256": "2AC611C51A4B660A80D1F81E8855513ACC845CFC6F5E2C5760514FC02ECCD1F0",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "ViDroid elderly UI",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\QLSV_NCKH\\03_ViDroid_Assistant_Dataset_Tool\\demo\\android_mockup_nguoi_lon_tuoi\\README.md",
+      "destination_path": "source_code/from_vidroid_elderly_ui/ORIGINAL_README.md",
+      "size_bytes": 5360,
+      "source_sha256": "F7896D6B0AF6DD88FF1C9E2E9ED8FF06B81D0F0C4F5694351A0596BF117EFE2C",
+      "destination_sha256": "AE40E03602EEF87DBD06BA2E5BECCCD9CCFCE4C2F5042300F12DF07BC45A6D75",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "ViDroid elderly UI",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\QLSV_NCKH\\03_ViDroid_Assistant_Dataset_Tool\\demo\\android_mockup_nguoi_lon_tuoi\\app\\src\\main\\res\\drawable\\badge_good.xml",
+      "destination_path": "source_code/from_vidroid_elderly_ui/res/drawable/badge_good.xml",
+      "size_bytes": 179,
+      "source_sha256": "BBF95D04BAB71DE88DEA57F880C85688958114961443E6463C864BCD00B3A4AC",
+      "destination_sha256": "36D368A6BBD02C8CAB7F1E234ECE99B27A93685FC2640B83A85E948E752F2C9D",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "ViDroid elderly UI",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\QLSV_NCKH\\03_ViDroid_Assistant_Dataset_Tool\\demo\\android_mockup_nguoi_lon_tuoi\\app\\src\\main\\res\\drawable\\badge_neutral.xml",
+      "destination_path": "source_code/from_vidroid_elderly_ui/res/drawable/badge_neutral.xml",
+      "size_bytes": 180,
+      "source_sha256": "2D49A32812E5FFADBA9E04D36219E3B4A43AE85871E5A49E27E8BEA9956DD23F",
+      "destination_sha256": "B1DDC203B8FF5B6806D031766A3785E90F26EAF07CC30A1A21A2D56D22A81B4B",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "ViDroid elderly UI",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\QLSV_NCKH\\03_ViDroid_Assistant_Dataset_Tool\\demo\\android_mockup_nguoi_lon_tuoi\\app\\src\\main\\res\\drawable\\badge_white.xml",
+      "destination_path": "source_code/from_vidroid_elderly_ui/res/drawable/badge_white.xml",
+      "size_bytes": 180,
+      "source_sha256": "A654577DD906AF58B23AC1AC240A3DEE370872DB24C3BB5A089923FCB9AA26DE",
+      "destination_sha256": "160F3F3FC4FF33E9A6844817C8AFA24713A4EA3FF3DF8BC08B32B0C0851C1B13",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "ViDroid elderly UI",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\QLSV_NCKH\\03_ViDroid_Assistant_Dataset_Tool\\demo\\android_mockup_nguoi_lon_tuoi\\app\\src\\main\\res\\drawable\\bg_cancel_btn.xml",
+      "destination_path": "source_code/from_vidroid_elderly_ui/res/drawable/bg_cancel_btn.xml",
+      "size_bytes": 221,
+      "source_sha256": "AA40252F99FB11AEFF94680F52370D19AC7BF91CDC55D34597EAF7BB36064A6D",
+      "destination_sha256": "7003B2ED958DCC60D7E5C014AF1CA45375216585951E6ED89905B961E0B4579A",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "ViDroid elderly UI",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\QLSV_NCKH\\03_ViDroid_Assistant_Dataset_Tool\\demo\\android_mockup_nguoi_lon_tuoi\\app\\src\\main\\res\\drawable\\bg_confirm_btn.xml",
+      "destination_path": "source_code/from_vidroid_elderly_ui/res/drawable/bg_confirm_btn.xml",
+      "size_bytes": 222,
+      "source_sha256": "DADE93D78B6AFE055B1B81E2095FCAB08E7930593BEB901925043EEAE7CFF84D",
+      "destination_sha256": "3FDFCD827AA8FA21792E0139BC7B23CB08AAABA6CFE6F51786A03E4F34048650",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "ViDroid elderly UI",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\QLSV_NCKH\\03_ViDroid_Assistant_Dataset_Tool\\demo\\android_mockup_nguoi_lon_tuoi\\app\\src\\main\\res\\drawable\\bg_gradient_banner.xml",
+      "destination_path": "source_code/from_vidroid_elderly_ui/res/drawable/bg_gradient_banner.xml",
+      "size_bytes": 479,
+      "source_sha256": "18AE41DC266BE8AAE94979D2324896B43E94F7DE7BC37BFAC237D704F712E0A6",
+      "destination_sha256": "A0619710D319F0DF9A890168702B29A61A1D94CD80B895F4EDC8E95685A2F982",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "ViDroid elderly UI",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\QLSV_NCKH\\03_ViDroid_Assistant_Dataset_Tool\\demo\\android_mockup_nguoi_lon_tuoi\\app\\src\\main\\res\\drawable\\bg_mic_circle.xml",
+      "destination_path": "source_code/from_vidroid_elderly_ui/res/drawable/bg_mic_circle.xml",
+      "size_bytes": 304,
+      "source_sha256": "FFD9E067FBD56A2254AA0D33AC184BC7EDEBD1C35C03D5F753935E835A2588E0",
+      "destination_sha256": "EA842411630D4275662CCC3C7931A5805B8DC20AD5FA8569F5645DE993D789CC",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "ViDroid elderly UI",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\QLSV_NCKH\\03_ViDroid_Assistant_Dataset_Tool\\demo\\android_mockup_nguoi_lon_tuoi\\app\\src\\main\\res\\drawable\\bg_pill.xml",
+      "destination_path": "source_code/from_vidroid_elderly_ui/res/drawable/bg_pill.xml",
+      "size_bytes": 291,
+      "source_sha256": "92A675405BDC7C70E909D4915E87B5291270511B39F8154EB6E93A3F47627DAC",
+      "destination_sha256": "03A7C00B567338A2AAF1D05E3EB162317E7D861C35B332BDE5375C503BE9986D",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "ViDroid elderly UI",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\QLSV_NCKH\\03_ViDroid_Assistant_Dataset_Tool\\demo\\android_mockup_nguoi_lon_tuoi\\app\\src\\main\\res\\drawable\\bg_primary_btn.xml",
+      "destination_path": "source_code/from_vidroid_elderly_ui/res/drawable/bg_primary_btn.xml",
+      "size_bytes": 224,
+      "source_sha256": "78CCDD5A3ABC7C53756E11AA4E72D7CFDC7ADE0FEE64571A931CD8E2721C5600",
+      "destination_sha256": "23F8640057FC996F24122727139C201785896F01793DEF5A2AEE3B22A70247CF",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "ViDroid elderly UI",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\QLSV_NCKH\\03_ViDroid_Assistant_Dataset_Tool\\demo\\android_mockup_nguoi_lon_tuoi\\app\\src\\main\\res\\drawable\\ic_mic_glyph.xml",
+      "destination_path": "source_code/from_vidroid_elderly_ui/res/drawable/ic_mic_glyph.xml",
+      "size_bytes": 1015,
+      "source_sha256": "024199A8A5EB4FC6A755BDBEF67194E80FD2BF89BFC48685B6450E381D7B0FD1",
+      "destination_sha256": "6A1526F12A714F380AD760154A0071E377C9FCB10A38D8BF53E974812A38969F",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "ViDroid elderly UI",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\QLSV_NCKH\\03_ViDroid_Assistant_Dataset_Tool\\demo\\android_mockup_nguoi_lon_tuoi\\app\\src\\main\\res\\layout\\activity_main.xml",
+      "destination_path": "source_code/from_vidroid_elderly_ui/res/layout/activity_main.xml",
+      "size_bytes": 23702,
+      "source_sha256": "98A404C164B0490B6736BA3E5843AF710591B71BC799279B1EEFED41D2E6F2A8",
+      "destination_sha256": "A4A9BD661C3DF8FCB247614974D0F15B6A2F9B3460279AC41FB7A65C6C60C785",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "ViDroid elderly UI",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\QLSV_NCKH\\03_ViDroid_Assistant_Dataset_Tool\\demo\\android_mockup_nguoi_lon_tuoi\\app\\src\\main\\res\\values\\colors.xml",
+      "destination_path": "source_code/from_vidroid_elderly_ui/res/values/colors.xml",
+      "size_bytes": 869,
+      "source_sha256": "B1300BAB82AD43FAC36FEE2A79494B98FBD136994F95B8B903D72DD88AEB0921",
+      "destination_sha256": "DF4F6E012A9045D69D77AB21A65A5147668B7CEEB0CDD9F21AD84B97454B872C",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "ViDroid elderly UI",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\QLSV_NCKH\\03_ViDroid_Assistant_Dataset_Tool\\demo\\android_mockup_nguoi_lon_tuoi\\app\\src\\main\\res\\values\\strings.xml",
+      "destination_path": "source_code/from_vidroid_elderly_ui/res/values/strings.xml",
+      "size_bytes": 1578,
+      "source_sha256": "2070AC0DDBC6F750E5A8D06D00480970C9F4108B064F9972833B2587545CF8D9",
+      "destination_sha256": "D5E30A7F867F68644FEA1409812C863B30FD02D8676321D5892CCF9055D544A5",
+      "normalized_text_equal": true
+    },
+    {
+      "group": "ViDroid elderly UI",
+      "source_path": "D:\\OneDrive - DH Cong nghe thong tin & Truyen Thong\\QLSV_NCKH\\03_ViDroid_Assistant_Dataset_Tool\\demo\\android_mockup_nguoi_lon_tuoi\\app\\src\\main\\res\\values\\themes.xml",
+      "destination_path": "source_code/from_vidroid_elderly_ui/res/values/themes.xml",
+      "size_bytes": 942,
+      "source_sha256": "4DDFBB9BDDE209AE0A7FFC815CD30F7ECDB249534F6939A64C5E3A806C0D2674",
+      "destination_sha256": "6688AAA182AE719F0F81B360C4FC11D6D22365F0BF0466D3BCE3209DF881763D",
+      "normalized_text_equal": true
+    }
+  ]
+}

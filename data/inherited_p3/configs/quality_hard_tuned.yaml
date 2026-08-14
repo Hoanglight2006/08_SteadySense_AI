@@ -1,0 +1,31 @@
+run_name: quality_hard_tuned_seed42
+seed: 42
+device: cpu
+data_dir: data/processed/quality_hard_tuned
+output_dir: outputs
+synthetic:
+  modalities: 2
+  embedding_dim: 16
+  classes: 4
+  samples_train: 1600
+  samples_val: 400
+  samples_test: 500
+  missing_probability: 0.05
+  prototype_scale: 0.75
+  quality_beta_alpha: 0.75
+  quality_beta_beta: 0.75
+  base_noise: 0.06
+  quality_noise_scale: 2.2
+  quality_noise_power: 1.0
+model:
+  hidden_dim: 48
+  quality_power: 2.0
+training:
+  batch_size: 128
+  epochs: 24
+  learning_rate: 0.001
+  quality_loss_weight: 0.25
+  num_workers: 0
+abstention:
+  confidence_threshold: 0.45
+  mean_quality_threshold: 0.35

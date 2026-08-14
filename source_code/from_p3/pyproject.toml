@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "edge-signal-quality-fusion"
+version = "0.1.0"
+description = "Portable signal-quality-aware multimodal fusion experiments"
+requires-python = ">=3.10,<3.14"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

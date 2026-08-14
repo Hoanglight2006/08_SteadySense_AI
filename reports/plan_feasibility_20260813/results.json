@@ -1,0 +1,46 @@
+{
+  "schema_version": "steadysense.plan-feasibility.v1",
+  "tested_on": "2026-08-13",
+  "verdict": "conditionally_feasible",
+  "schedule_weeks": {
+    "best_case_three_people": 14,
+    "likely_current_state_min": 17,
+    "likely_current_state_max": 20,
+    "two_people_min": 20,
+    "two_people_max": 24,
+    "one_person_min": 28,
+    "one_person_max": 36
+  },
+  "checks": {
+    "plan_phases_and_gates": "pass",
+    "onedrive_foundation_integrity": "pass_42_of_42",
+    "p3_manifest_integrity": "pass_45_of_45",
+    "python_core_import": "pass",
+    "pytorch_forward": "pass",
+    "torch_export": "pass",
+    "p3_full_requirements": "partial_missing_reportlab_svglib",
+    "android_sdk": "partial",
+    "jdk17": "blocked_incomplete_installation",
+    "steadysense_android_project": "blocked_not_created",
+    "android_device_or_emulator": "blocked_none_connected",
+    "kotlin_unit_tests": "not_run_jdk_blocker",
+    "steadysense_dataset": "blocked_absent",
+    "on_device_converter": "not_run_not_installed"
+  },
+  "input_sha256": {
+    "docs/02_KE_HOACH_PHAT_TRIEN_MVP.md": "81D5B4B7020FA0133B0520CC03E6CFBAE7F4D00E288B36B72EB23B1F19F8570F",
+    "provenance_onedrive_foundations.json": "BC1F9984458CBAF3090EE90680999E2FAE143F2237A39BB01709D69EF377BBC7",
+    "source_code/from_p3/quality_fusion/core.py": "869110535C1CEC9DE93192F1F84CA8714B1DDE8C3070DD0637410FA8CE0B91EF"
+  },
+  "interpretation_limit": "Software and schedule feasibility audit only; no clinical or target-user evidence."
+  ,
+  "superseded_checks_after_implementation": {
+    "updated_on": "2026-08-13",
+    "jdk17": "resolved_using_D:/Android/jbr_21",
+    "steadysense_android_project": "resolved_created_and_built",
+    "kotlin_unit_tests": "pass",
+    "android_lint": "pass_zero_errors",
+    "android_device_or_emulator": "still_blocked_none_connected",
+    "steadysense_dataset": "still_blocked_absent"
+  }
+}

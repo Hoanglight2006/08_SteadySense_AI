@@ -1,0 +1,20 @@
+# Generated build/test output
+**/build/
+**/.gradle/
+**/__pycache__/
+**/.pytest_cache/
+**/.venv/
+*.py[cod]
+
+# Local Android and IDE settings
+src/local.properties
+.idea/
+*.iml
+
+# Raw participant data and trained models are never committed
+data/raw/
+data/private/
+*.pt
+*.pth
+*.tflite
+

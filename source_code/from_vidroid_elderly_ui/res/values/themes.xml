@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.ViDroidCallElderly" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/brand_solid</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorError">@color/bad</item>
+        <item name="colorOnError">@color/white</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorOnSurface">@color/ink</item>
+        <item name="colorSurfaceVariant">@color/chip_bg</item>
+        <item name="colorOnSurfaceVariant">@color/muted</item>
+        <item name="colorOutline">@color/border</item>
+        <item name="android:colorBackground">@color/page_bg</item>
+        <item name="android:windowBackground">@color/page_bg</item>
+        <item name="android:statusBarColor">@color/brand_end</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>
+

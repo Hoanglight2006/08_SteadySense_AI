@@ -1,0 +1,316 @@
+{
+  "synthetic_config": {
+    "participants": [
+      "P001",
+      "P002",
+      "P003",
+      "P004",
+      "P005"
+    ],
+    "sessions_per_condition": 2,
+    "duration_s": 8.0,
+    "window_size": 40,
+    "sample_rate_hz": 20.0,
+    "seed": 42
+  },
+  "participant_split": {
+    "P005": "train",
+    "P003": "train",
+    "P004": "train",
+    "P002": "val",
+    "P001": "test"
+  },
+  "tier1_rule_based_quality": {
+    "NORMAL_WEAR": {
+      "window_count": 30,
+      "reliable_rate": 1.0
+    },
+    "LOOSE_STRAP": {
+      "window_count": 30,
+      "reliable_rate": 1.0
+    },
+    "ROTATED": {
+      "window_count": 30,
+      "reliable_rate": 1.0
+    },
+    "PACKET_LOSS_REPLAY": {
+      "window_count": 30,
+      "reliable_rate": 0.1
+    },
+    "TIMING_JITTER_REPLAY": {
+      "window_count": 30,
+      "reliable_rate": 1.0
+    },
+    "CLIPPING_REPLAY": {
+      "window_count": 30,
+      "reliable_rate": 0.0
+    },
+    "REST": {
+      "window_count": 30,
+      "reliable_rate": 1.0
+    },
+    "DAILY_ACTIVITY_DISTRACTOR": {
+      "window_count": 30,
+      "reliable_rate": 1.0
+    }
+  },
+  "tier2_cycle_counting": {
+    "overall_mae": 0.017,
+    "session_count": 60,
+    "mae_by_condition": {
+      "NORMAL_WEAR": 0.0,
+      "LOOSE_STRAP": 0.1,
+      "ROTATED": 0.0,
+      "PACKET_LOSS_REPLAY": 0.0,
+      "TIMING_JITTER_REPLAY": 0.0,
+      "CLIPPING_REPLAY": 0.0
+    }
+  },
+  "tier3_raw_cnn": {
+    "train": {
+      "macro_f1": 1.0,
+      "count": 144
+    },
+    "val": {
+      "macro_f1": 1.0,
+      "count": 48
+    },
+    "test": {
+      "macro_f1": 1.0,
+      "count": 48
+    }
+  },
+  "tier4_p3_fusion": {
+    "fixed_fusion": {
+      "model_name": "fixed_fusion",
+      "modalities": 2,
+      "embedding_dim": 12,
+      "train": {
+        "accuracy": 0.8680555555555556,
+        "macro_f1": 0.6301925025329281,
+        "ece": 0.15454644544257057,
+        "nll": 0.375844269990921,
+        "brier": 0.20335927605628967,
+        "risk_coverage": [
+          {
+            "coverage": 1.0,
+            "risk": 0.13194444444444445,
+            "selective_macro_f1": 0.6301925025329281
+          },
+          {
+            "coverage": 0.9027777777777778,
+            "risk": 0.13076923076923078,
+            "selective_macro_f1": 0.6403100775193798
+          },
+          {
+            "coverage": 0.8055555555555556,
+            "risk": 0.1206896551724138,
+            "selective_macro_f1": 0.6440129449838188
+          },
+          {
+            "coverage": 0.7013888888888888,
+            "risk": 0.06930693069306931,
+            "selective_macro_f1": 0.48205128205128206
+          },
+          {
+            "coverage": 0.5,
+            "risk": 0.0,
+            "selective_macro_f1": 1.0
+          }
+        ],
+        "quality_error_auroc": 0.6332631578947368,
+        "low_quality_macro_f1": 0.6301925025329281,
+        "low_quality_count": 144,
+        "count": 144
+      },
+      "val": {
+        "accuracy": 0.8541666666666666,
+        "macro_f1": 0.6068277713847334,
+        "ece": 0.09800184393922487,
+        "nll": 0.38185858726501465,
+        "brier": 0.20640532672405243,
+        "risk_coverage": [
+          {
+            "coverage": 1.0,
+            "risk": 0.14583333333333334,
+            "selective_macro_f1": 0.6068277713847334
+          },
+          {
+            "coverage": 0.9166666666666666,
+            "risk": 0.13636363636363635,
+            "selective_macro_f1": 0.6396396396396397
+          },
+          {
+            "coverage": 0.8125,
+            "risk": 0.10256410256410256,
+            "selective_macro_f1": 0.6481481481481481
+          },
+          {
+            "coverage": 0.7083333333333334,
+            "risk": 0.058823529411764705,
+            "selective_macro_f1": 0.48484848484848486
+          },
+          {
+            "coverage": 0.5,
+            "risk": 0.0,
+            "selective_macro_f1": 1.0
+          }
+        ],
+        "quality_error_auroc": 0.6202090592334495,
+        "low_quality_macro_f1": 0.6068277713847334,
+        "low_quality_count": 48,
+        "count": 48
+      },
+      "test": {
+        "accuracy": 0.8333333333333334,
+        "macro_f1": 0.5666666666666668,
+        "ece": 0.22801747856040797,
+        "nll": 0.40043774247169495,
+        "brier": 0.22254841029644012,
+        "risk_coverage": [
+          {
+            "coverage": 1.0,
+            "risk": 0.16666666666666666,
+            "selective_macro_f1": 0.5666666666666668
+          },
+          {
+            "coverage": 0.9166666666666666,
+            "risk": 0.13636363636363635,
+            "selective_macro_f1": 0.6410256410256411
+          },
+          {
+            "coverage": 0.8125,
+            "risk": 0.15384615384615385,
+            "selective_macro_f1": 0.638095238095238
+          },
+          {
+            "coverage": 0.7083333333333334,
+            "risk": 0.08823529411764706,
+            "selective_macro_f1": 0.47692307692307695
+          },
+          {
+            "coverage": 0.5,
+            "risk": 0.0,
+            "selective_macro_f1": 1.0
+          }
+        ],
+        "quality_error_auroc": 0.7937500000000001,
+        "low_quality_macro_f1": 0.5666666666666668,
+        "low_quality_count": 48,
+        "count": 48
+      }
+    },
+    "quality_fusion": {
+      "model_name": "quality_fusion",
+      "modalities": 2,
+      "embedding_dim": 12,
+      "train": {
+        "accuracy": 0.9930555555555556,
+        "macro_f1": 0.9889400921658987,
+        "ece": 0.047716346465879016,
+        "nll": 0.06076008826494217,
+        "brier": 0.01617027074098587,
+        "risk_coverage": [
+          {
+            "coverage": 1.0,
+            "risk": 0.006944444444444444,
+            "selective_macro_f1": 0.9889400921658987
+          },
+          {
+            "coverage": 0.9027777777777778,
+            "risk": 0.0,
+            "selective_macro_f1": 1.0
+          },
+          {
+            "coverage": 0.8055555555555556,
+            "risk": 0.0,
+            "selective_macro_f1": 1.0
+          },
+          {
+            "coverage": 0.7013888888888888,
+            "risk": 0.0,
+            "selective_macro_f1": 1.0
+          },
+          {
+            "coverage": 0.5,
+            "risk": 0.0,
+            "selective_macro_f1": 1.0
+          }
+        ],
+        "quality_error_auroc": 0.006993006993006978,
+        "count": 144
+      },
+      "val": {
+        "accuracy": 0.9375,
+        "macro_f1": 0.9079934150356684,
+        "ece": 0.06764441852768263,
+        "nll": 0.12467291206121445,
+        "brier": 0.06208650395274162,
+        "risk_coverage": [
+          {
+            "coverage": 1.0,
+            "risk": 0.0625,
+            "selective_macro_f1": 0.9079934150356684
+          },
+          {
+            "coverage": 0.9166666666666666,
+            "risk": 0.0,
+            "selective_macro_f1": 1.0
+          },
+          {
+            "coverage": 0.8125,
+            "risk": 0.0,
+            "selective_macro_f1": 1.0
+          },
+          {
+            "coverage": 0.7083333333333334,
+            "risk": 0.0,
+            "selective_macro_f1": 1.0
+          },
+          {
+            "coverage": 0.5,
+            "risk": 0.0,
+            "selective_macro_f1": 1.0
+          }
+        ],
+        "quality_error_auroc": 0.5333333333333333,
+        "count": 48
+      },
+      "test": {
+        "accuracy": 1.0,
+        "macro_f1": 1.0,
+        "ece": 0.05703172708551089,
+        "nll": 0.06158268451690674,
+        "brier": 0.012755919247865677,
+        "risk_coverage": [
+          {
+            "coverage": 1.0,
+            "risk": 0.0,
+            "selective_macro_f1": 1.0
+          },
+          {
+            "coverage": 0.9166666666666666,
+            "risk": 0.0,
+            "selective_macro_f1": 1.0
+          },
+          {
+            "coverage": 0.8125,
+            "risk": 0.0,
+            "selective_macro_f1": 1.0
+          },
+          {
+            "coverage": 0.7083333333333334,
+            "risk": 0.0,
+            "selective_macro_f1": 1.0
+          },
+          {
+            "coverage": 0.5,
+            "risk": 0.0,
+            "selective_macro_f1": 1.0
+          }
+        ],
+        "count": 48
+      }
+    }
+  }
+}

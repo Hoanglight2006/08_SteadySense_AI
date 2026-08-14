@@ -1,0 +1,17 @@
+run_name: p1_hhar_signal_quality_soft
+seed: 42
+device: cpu
+data_dir: data/processed/p1_hhar_signal_quality
+output_dir: outputs
+model:
+  hidden_dim: 64
+  quality_power: 0.5
+training:
+  batch_size: 256
+  epochs: 20
+  learning_rate: 0.001
+  quality_loss_weight: 0.5
+  num_workers: 0
+abstention:
+  confidence_threshold: 0.45
+  mean_quality_threshold: 0.35

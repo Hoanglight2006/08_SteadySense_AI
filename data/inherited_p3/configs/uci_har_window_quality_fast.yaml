@@ -1,0 +1,17 @@
+run_name: uci_har_window_quality_fast
+seed: 42
+device: cpu
+data_dir: data/processed/uci_har_window_quality
+output_dir: outputs
+model:
+  hidden_dim: 48
+  quality_power: 0.5
+training:
+  batch_size: 512
+  epochs: 8
+  learning_rate: 0.001
+  quality_loss_weight: 0.5
+  num_workers: 0
+abstention:
+  confidence_threshold: 0.45
+  mean_quality_threshold: 0.35

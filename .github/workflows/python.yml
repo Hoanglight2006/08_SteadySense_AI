@@ -1,0 +1,27 @@
+name: Python ML and data QC
+
+on:
+  push:
+    paths:
+      - "source_code/steadysense_ml/**"
+      - ".github/workflows/python.yml"
+  pull_request:
+    paths:
+      - "source_code/steadysense_ml/**"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: source_code/steadysense_ml
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: source_code/steadysense_ml/requirements.txt
+      - run: pip install -r requirements.txt
+      - run: python -m pytest tests
+

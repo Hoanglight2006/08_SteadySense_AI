@@ -1,0 +1,28 @@
+{
+  "schema_version": "steadysense.software-check.v1",
+  "run_date": "2026-08-13",
+  "scope": "synthetic_ui_and_pure_kotlin_logic_only",
+  "build": "pass",
+  "unit_tests": {
+    "tests": 6,
+    "failures": 0,
+    "errors": 0
+  },
+  "lint": {
+    "phone": {"errors": 0, "warnings": 5},
+    "wear": {"errors": 0, "warnings": 3}
+  },
+  "artifacts": [
+    {
+      "path": "src/phone/build/outputs/apk/debug/phone-debug.apk",
+      "bytes": 9930622,
+      "sha256": "A8D7D543AACC1FC93D6DF2E83508863845F3C163076D8D6B6C532A826DA0C208"
+    },
+    {
+      "path": "src/wear/build/outputs/apk/debug/wear-debug.apk",
+      "bytes": 26295801,
+      "sha256": "498F1DE7D212F5C49CAAE869209A59DB1CF3146DFE34B3AC81E660A33476E3EC"
+    }
+  ],
+  "interpretation_limit": "Software verification with sample state only; no sensor, participant, clinical, or target-user evidence."
+}

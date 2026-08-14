@@ -1,0 +1,462 @@
+[
+  {
+    "degradation_id": "deg_0001",
+    "modality": "imu",
+    "degradation_type": "noise",
+    "level": "clean",
+    "severity": 0.0,
+    "quality_target": 1.0,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0002",
+    "modality": "imu",
+    "degradation_type": "noise",
+    "level": "mild",
+    "severity": 0.25,
+    "quality_target": 0.75,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0003",
+    "modality": "imu",
+    "degradation_type": "noise",
+    "level": "moderate",
+    "severity": 0.5,
+    "quality_target": 0.5,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0004",
+    "modality": "imu",
+    "degradation_type": "noise",
+    "level": "severe",
+    "severity": 0.75,
+    "quality_target": 0.25,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0005",
+    "modality": "imu",
+    "degradation_type": "bias",
+    "level": "clean",
+    "severity": 0.0,
+    "quality_target": 1.0,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0006",
+    "modality": "imu",
+    "degradation_type": "bias",
+    "level": "mild",
+    "severity": 0.25,
+    "quality_target": 0.75,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0007",
+    "modality": "imu",
+    "degradation_type": "bias",
+    "level": "moderate",
+    "severity": 0.5,
+    "quality_target": 0.5,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0008",
+    "modality": "imu",
+    "degradation_type": "bias",
+    "level": "severe",
+    "severity": 0.75,
+    "quality_target": 0.25,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0009",
+    "modality": "imu",
+    "degradation_type": "rotation",
+    "level": "clean",
+    "severity": 0.0,
+    "quality_target": 1.0,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0010",
+    "modality": "imu",
+    "degradation_type": "rotation",
+    "level": "mild",
+    "severity": 0.25,
+    "quality_target": 0.75,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0011",
+    "modality": "imu",
+    "degradation_type": "rotation",
+    "level": "moderate",
+    "severity": 0.5,
+    "quality_target": 0.5,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0012",
+    "modality": "imu",
+    "degradation_type": "rotation",
+    "level": "severe",
+    "severity": 0.75,
+    "quality_target": 0.25,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0013",
+    "modality": "imu",
+    "degradation_type": "sample_drop",
+    "level": "clean",
+    "severity": 0.0,
+    "quality_target": 1.0,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0014",
+    "modality": "imu",
+    "degradation_type": "sample_drop",
+    "level": "mild",
+    "severity": 0.25,
+    "quality_target": 0.75,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0015",
+    "modality": "imu",
+    "degradation_type": "sample_drop",
+    "level": "moderate",
+    "severity": 0.5,
+    "quality_target": 0.5,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0016",
+    "modality": "imu",
+    "degradation_type": "sample_drop",
+    "level": "severe",
+    "severity": 0.75,
+    "quality_target": 0.25,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0017",
+    "modality": "imu",
+    "degradation_type": "sampling_rate_mismatch",
+    "level": "clean",
+    "severity": 0.0,
+    "quality_target": 1.0,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0018",
+    "modality": "imu",
+    "degradation_type": "sampling_rate_mismatch",
+    "level": "mild",
+    "severity": 0.25,
+    "quality_target": 0.75,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0019",
+    "modality": "imu",
+    "degradation_type": "sampling_rate_mismatch",
+    "level": "moderate",
+    "severity": 0.5,
+    "quality_target": 0.5,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0020",
+    "modality": "imu",
+    "degradation_type": "sampling_rate_mismatch",
+    "level": "severe",
+    "severity": 0.75,
+    "quality_target": 0.25,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0021",
+    "modality": "imu",
+    "degradation_type": "clipping",
+    "level": "clean",
+    "severity": 0.0,
+    "quality_target": 1.0,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0022",
+    "modality": "imu",
+    "degradation_type": "clipping",
+    "level": "mild",
+    "severity": 0.25,
+    "quality_target": 0.75,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0023",
+    "modality": "imu",
+    "degradation_type": "clipping",
+    "level": "moderate",
+    "severity": 0.5,
+    "quality_target": 0.5,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0024",
+    "modality": "imu",
+    "degradation_type": "clipping",
+    "level": "severe",
+    "severity": 0.75,
+    "quality_target": 0.25,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0025",
+    "modality": "audio",
+    "degradation_type": "noise",
+    "level": "clean",
+    "severity": 0.0,
+    "quality_target": 1.0,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0026",
+    "modality": "audio",
+    "degradation_type": "noise",
+    "level": "mild",
+    "severity": 0.25,
+    "quality_target": 0.75,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0027",
+    "modality": "audio",
+    "degradation_type": "noise",
+    "level": "moderate",
+    "severity": 0.5,
+    "quality_target": 0.5,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0028",
+    "modality": "audio",
+    "degradation_type": "noise",
+    "level": "severe",
+    "severity": 0.75,
+    "quality_target": 0.25,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0029",
+    "modality": "audio",
+    "degradation_type": "clipping",
+    "level": "clean",
+    "severity": 0.0,
+    "quality_target": 1.0,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0030",
+    "modality": "audio",
+    "degradation_type": "clipping",
+    "level": "mild",
+    "severity": 0.25,
+    "quality_target": 0.75,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0031",
+    "modality": "audio",
+    "degradation_type": "clipping",
+    "level": "moderate",
+    "severity": 0.5,
+    "quality_target": 0.5,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0032",
+    "modality": "audio",
+    "degradation_type": "clipping",
+    "level": "severe",
+    "severity": 0.75,
+    "quality_target": 0.25,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0033",
+    "modality": "audio",
+    "degradation_type": "gain_shift",
+    "level": "clean",
+    "severity": 0.0,
+    "quality_target": 1.0,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0034",
+    "modality": "audio",
+    "degradation_type": "gain_shift",
+    "level": "mild",
+    "severity": 0.25,
+    "quality_target": 0.75,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0035",
+    "modality": "audio",
+    "degradation_type": "gain_shift",
+    "level": "moderate",
+    "severity": 0.5,
+    "quality_target": 0.5,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0036",
+    "modality": "audio",
+    "degradation_type": "gain_shift",
+    "level": "severe",
+    "severity": 0.75,
+    "quality_target": 0.25,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0037",
+    "modality": "audio",
+    "degradation_type": "frame_drop",
+    "level": "clean",
+    "severity": 0.0,
+    "quality_target": 1.0,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0038",
+    "modality": "audio",
+    "degradation_type": "frame_drop",
+    "level": "mild",
+    "severity": 0.25,
+    "quality_target": 0.75,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0039",
+    "modality": "audio",
+    "degradation_type": "frame_drop",
+    "level": "moderate",
+    "severity": 0.5,
+    "quality_target": 0.5,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0040",
+    "modality": "audio",
+    "degradation_type": "frame_drop",
+    "level": "severe",
+    "severity": 0.75,
+    "quality_target": 0.25,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0041",
+    "modality": "audio",
+    "degradation_type": "resampling_mismatch",
+    "level": "clean",
+    "severity": 0.0,
+    "quality_target": 1.0,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0042",
+    "modality": "audio",
+    "degradation_type": "resampling_mismatch",
+    "level": "mild",
+    "severity": 0.25,
+    "quality_target": 0.75,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0043",
+    "modality": "audio",
+    "degradation_type": "resampling_mismatch",
+    "level": "moderate",
+    "severity": 0.5,
+    "quality_target": 0.5,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0044",
+    "modality": "audio",
+    "degradation_type": "resampling_mismatch",
+    "level": "severe",
+    "severity": 0.75,
+    "quality_target": 0.25,
+    "cross_modal_condition": "none",
+    "notes": ""
+  },
+  {
+    "degradation_id": "deg_0045",
+    "modality": "multi",
+    "degradation_type": "conflict",
+    "level": "moderate",
+    "severity": 0.5,
+    "quality_target": 0.5,
+    "cross_modal_condition": "conflict",
+    "notes": "Cross-modal benchmark slice; define exact implementation per dataset."
+  },
+  {
+    "degradation_id": "deg_0046",
+    "modality": "multi",
+    "degradation_type": "delay",
+    "level": "moderate",
+    "severity": 0.5,
+    "quality_target": 0.5,
+    "cross_modal_condition": "delay",
+    "notes": "Cross-modal benchmark slice; define exact implementation per dataset."
+  }
+]

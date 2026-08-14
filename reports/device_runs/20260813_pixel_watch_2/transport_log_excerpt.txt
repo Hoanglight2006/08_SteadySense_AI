@@ -1,0 +1,15 @@
+Final hardware run, 2026-08-13 (Asia/Saigon)
+sessionId=01ba7787-1ffe-4c93-ba3d-65886cba686e
+
+Phone: sequence=1 inserted=true, ACK sent
+Wear:  sequence=1 ACK received, removed=true
+Phone: sequence=2 inserted=true, ACK sent
+Wear:  sequence=2 ACK received, removed=true
+Phone: sequence=3 inserted=true, ACK sent
+Wear:  sequence=3 ACK received, removed=true
+Phone: sequence=4 inserted=true, ACK sent
+Wear:  sequence=4 ACK received, removed=true
+Phone: sequence=5 inserted=true, ACK sent
+Wear:  sequence=5 ACK received, removed=true
+
+Both application PIDs: no FATAL EXCEPTION observed.

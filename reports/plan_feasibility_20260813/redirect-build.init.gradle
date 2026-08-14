@@ -1,0 +1,6 @@
+gradle.beforeProject { project ->
+    def safeName = project.path == ":" ? "root" : project.path.substring(1).replace(":", "_")
+    project.layout.buildDirectory.set(
+        new File("D:/OneDrive - DH Cong nghe thong tin & Truyen Thong/QLSV_NCKH/08_SteadySense_AI/reports/plan_feasibility_20260813/gradle-build/" + safeName)
+    )
+}

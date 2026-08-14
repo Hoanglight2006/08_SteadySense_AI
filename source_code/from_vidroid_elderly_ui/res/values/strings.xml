@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ViDroidCall</string>
+    <string name="app_tagline">Trợ lý giọng nói cho người lớn tuổi</string>
+
+    <string name="home_hint">Nhấn vào micro rồi nói, ví dụ:</string>
+    <string name="home_example_1">"Đặt báo thức 6 giờ sáng mai"</string>
+    <string name="home_example_2">"Gọi cho con trai"</string>
+    <string name="home_example_3">"Nhắn tin cho Nam"</string>
+    <string name="home_tap">Nhấn để nói</string>
+
+    <string name="listening">Đang nghe...</string>
+    <string name="thinking">Đang hiểu ý bác...</string>
+
+    <string name="permission_needed">Cần quyền dùng micro để nghe bác nói. Bấm để cấp quyền.</string>
+    <string name="permission_denied">Chưa được cấp quyền micro nên không nghe được. Vào Cài đặt để bật quyền Micro cho ứng dụng.</string>
+
+    <string name="not_understood_title">Bác vui lòng nói lại</string>
+    <string name="not_understood_body">Thử nói: "đặt báo thức", "gọi cho…" hoặc "nhắn tin cho…"</string>
+    <string name="try_again">Nói lại</string>
+
+    <string name="confirm_yes">Đúng, làm luôn</string>
+    <string name="confirm_no">Không phải</string>
+    <string name="no_confirmation_needed">Không cần xác nhận — lệnh an toàn, thực hiện ngay</string>
+
+    <string name="back_home">Về màn hình chính</string>
+    <string name="cancelled_title">Đã huỷ, không có gì được gửi</string>
+</resources>
+

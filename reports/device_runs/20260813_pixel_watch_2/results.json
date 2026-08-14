@@ -1,0 +1,44 @@
+{
+  "runDate": "2026-08-13",
+  "phone": {
+    "manufacturer": "Samsung",
+    "model": "SM-N981U1",
+    "android": 13,
+    "adbTransport": "usb",
+    "serial": "RFCN700MRBF",
+    "installed": true,
+    "launched": true,
+    "wearPeerVisible": true
+  },
+  "watch": {
+    "manufacturer": "Google",
+    "model": "Pixel Watch 2",
+    "device": "aurora",
+    "android": 17,
+    "api": 37,
+    "adbTransport": "wifi",
+    "serial": "172.20.10.12:38925",
+    "installed": true,
+    "launched": true,
+    "phonePeerVisible": true,
+    "accelerometerPresent": true,
+    "gyroscopePresent": true,
+    "observedImuEventsFinalRun": 930,
+    "createdWindowsFinalRun": 5,
+    "acknowledgedWindowsFinalRun": 5,
+    "pendingAfterAckFinalRun": 0,
+    "roomOutboxPresent": true
+  },
+  "transport": {
+    "protocolVersion": 1,
+    "framesPerWindow": 40,
+    "targetRateHz": 20,
+    "maxPairSkewMillis": 30,
+    "phoneRoomPresent": true,
+    "deduplicationKey": "sessionId+sequenceId",
+    "processRestartRecoveryObserved": true
+  },
+  "phoneStoredWindowsCumulativeAfterTests": 94,
+  "fatalExceptionObserved": false,
+  "interpretation": "Software smoke test only; no clinical or research conclusion."
+}

@@ -1,0 +1,24 @@
+run_name: smoke_p3
+seed: 42
+device: cpu
+data_dir: data/processed/smoke
+output_dir: outputs
+synthetic:
+  modalities: 2
+  embedding_dim: 24
+  classes: 4
+  samples_train: 320
+  samples_val: 100
+  samples_test: 120
+  missing_probability: 0.08
+model:
+  hidden_dim: 32
+training:
+  batch_size: 64
+  epochs: 4
+  learning_rate: 0.001
+  quality_loss_weight: 0.5
+  num_workers: 0
+abstention:
+  confidence_threshold: 0.45
+  mean_quality_threshold: 0.35
