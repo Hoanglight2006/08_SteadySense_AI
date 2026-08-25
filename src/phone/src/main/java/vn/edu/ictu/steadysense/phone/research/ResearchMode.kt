@@ -55,7 +55,7 @@ import vn.edu.ictu.steadysense.phone.data.ResearchParticipantEntity
 import vn.edu.ictu.steadysense.phone.data.ResearchSessionEntity
 import vn.edu.ictu.steadysense.phone.transport.PhoneTransferState
 
-private val conditions = listOf("NORMAL_WEAR", "LOOSE_STRAP", "ROTATED", "REST", "DISTRACTOR")
+private val conditions = listOf("NORMAL_WEAR", "LOOSE_STRAP", "ROTATED", "REST", "DAILY_ACTIVITY_DISTRACTOR")
 private val io = Executors.newSingleThreadExecutor()
 
 data class ResearchUiState(val sessionId: String? = null, val active: Boolean = false,
@@ -127,7 +127,10 @@ fun ResearchModeScreen() {
             }
         }
         item {
-            Button(onClick = { export.launch("steadysense-${state.sessionId}.zip") },
+            Button(onClick = { 
+    val fileName = "${participant}_${condition.lowercase()}_${side.lowercase()}_test.zip"
+    export.launch(fileName) 
+},
                 enabled = state.sessionId != null && !state.active, modifier = Modifier.fillMaxWidth()) {
                 Text("Xuất bundle ZIP")
             }
