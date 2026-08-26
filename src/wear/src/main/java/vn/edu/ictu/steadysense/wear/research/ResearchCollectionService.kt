@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.IBinder
 import android.os.Handler
 import android.os.Looper
+import android.os.PowerManager
 import android.os.SystemClock
 import android.os.VibrationEffect
 import android.os.Vibrator
@@ -104,6 +105,7 @@ class ResearchCollectionService : Service(), SensorEventListener {
     private var windows = 0
     private var markers = 0
     private var beatThread: Thread? = null
+    private var wakeLock: PowerManager.WakeLock? = null
     private val io = Executors.newSingleThreadExecutor()
 
     override fun onCreate() {
@@ -133,11 +135,21 @@ class ResearchCollectionService : Service(), SensorEventListener {
         sequence = getSharedPreferences("research_sequence", MODE_PRIVATE).getLong(sessionId, 0L)
         getSystemService(NotificationManager::class.java).notify(NOTIFICATION_ID,
             notification(config.participantCode))
-        if (assembler == null) {
-            val offset = System.currentTimeMillis() * 1_000_000L - SystemClock.elapsedRealtimeNanos()
-            assembler = ImuWindowAssembler(offset)
-            manager.registerListener(this, manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME)
-            manager.registerListener(this, manager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_GAME)
+        if (wakeLock == null) {
+            val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "SteadySense:ResearchWakeLock").apply {
+                setReferenceCounted(false)
+                acquire(45 * 60 * 1000L)
+            }
+        }
+        val offset = System.currentTimeMillis() * 1_000_000L - SystemClock.elapsedRealtimeNanos()
+        assembler = ImuWindowAssembler(offset)
+        manager.unregisterListener(this)
+        manager.registerListener(this, manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME)
+        manager.registerListener(this, manager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), SensorManager.SENSOR_DELAY_GAME)
+        beatThread?.interrupt()
+        beatThread = null
+        if (config.condition !in listOf("REST", "DAILY_ACTIVITY_DISTRACTOR") && config.targetCycles > 0) {
             startMetronome(config.tempoBpm)
         }
         WearResearchState.snapshot = ResearchCollectionSnapshot(true, sessionId, config.participantCode)
@@ -168,6 +180,12 @@ class ResearchCollectionService : Service(), SensorEventListener {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onDestroy() {
+        try {
+            if (wakeLock?.isHeld == true) {
+                wakeLock?.release()
+            }
+        } catch (_: Exception) {}
+        wakeLock = null
         manager.unregisterListener(this)
         beatThread?.interrupt()
         io.shutdown()

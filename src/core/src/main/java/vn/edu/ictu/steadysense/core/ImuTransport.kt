@@ -52,6 +52,7 @@ class ImuWindowAssembler(
     private val gyroscopeQueue = ArrayDeque<SensorVector>()
     private var lastAcceptedTimestamp = Long.MIN_VALUE
     private val frames = ArrayList<ImuFrame>(windowSize)
+    private val minStepNanos = (targetIntervalNanos * 0.70).toLong()
 
     fun onGyroscope(sample: SensorVector): ImuWindow? {
         gyroscopeQueue.addLast(sample)
@@ -77,7 +78,7 @@ class ImuWindowAssembler(
             accelerometerQueue.removeFirst()
             gyroscopeQueue.removeFirst()
             if (lastAcceptedTimestamp != Long.MIN_VALUE &&
-                accel.timestampNanos - lastAcceptedTimestamp < targetIntervalNanos
+                accel.timestampNanos - lastAcceptedTimestamp < minStepNanos
             ) continue
 
             lastAcceptedTimestamp = accel.timestampNanos
