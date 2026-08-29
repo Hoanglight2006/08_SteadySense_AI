@@ -12,6 +12,9 @@ marker, export ZIP có SHA-256, validator QC và lệnh pipeline cho dữ liệu
 đã build/test/lint PASS cục bộ. **Vẫn chưa có dữ liệu tuân thủ vận động THẬT,
 chưa smoke-test bản Research Mode mới trên đủ cặp phone–watch, và chưa huấn
 luyện model nào trên dữ liệu thật.**
+**Giai đoạn:** hoàn thành huấn luyện và benchmark Model Ladder trên **dữ liệu 12 người thật** (`P001` - `P012`). Pipeline đã qua validator QC, chia train/val/test theo người tham gia, hoàn thành đánh giá Tầng 1 (Rule-based), Tầng 2 (Cycle Counting), Tầng 3 (Raw 1D-CNN), Tầng 4 (Quality-Aware Fusion vs Fixed Fusion) và chạy trọn vẹn 46 kịch bản suy giảm tín hiệu (Degradation Benchmark) của P3.
+- Kết quả: `quality_fusion` đạt Test Macro-F1 0.8047 (vượt `fixed_fusion` 0.7649); khi lọc 30% mẫu tín hiệu kém (Coverage 70%), Macro-F1 vọt lên 0.8951 với rủi ro sai sót 7.2%.
+- Trọng số `.pt` và báo cáo đã được lưu tại `reports/student_runs/20260829_real_pilot/`.
 
 ## 1. Mục tiêu ngắn
 
