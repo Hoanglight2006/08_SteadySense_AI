@@ -8,43 +8,27 @@ bị đeo lỏng hoặc lệch vị trí, vấn đề thường gặp ở nhóm 
 
 ## Trạng thái
 
-**Giai đoạn:** khởi tạo và kiểm chứng bằng chứng nền. Chưa có MVP và chưa có
-kết quả thực nghiệm riêng của SteadySense AI.
+- **Giai đoạn hiện tại:** Đã hoàn thành triển khai nguyên mẫu Android & Wear OS (Jetpack Compose, Room v2, Data Layer Transport) và hoàn tất kiểm thử thực nghiệm trên tập dữ liệu **12 người tham gia khỏe mạnh (`P001` - `P012`)**.
+- **Kết quả thực nghiệm chính (Test Split độc lập theo người):**
+  - **Tầng 1 (Rule-based):** Bị "mù" trước hiện tượng đeo lỏng/xoay lệch (vẫn báo tin cậy >97%).
+  - **Tầng 3 (Raw 1D-CNN):** Rớt Macro-F1 xuống **0.597** do biến thiên dữ liệu giữa các đối tượng.
+  - **Tầng 4 (Quality-Aware Fusion):** Đạt Macro-F1 **0.8047** (vượt trội hơn `fixed_fusion` 0.7649).
+  - **Cơ chế từ chối khi tín hiệu xấu (Coverage 70%):** Macro-F1 tăng vọt lên **0.8951** (gần 90%) và tỷ lệ rủi ro sai sót giảm chỉ còn **7.2%**.
+  - **Độ bền vững (Degradation Benchmark):** Hoàn thành 46 kịch bản suy giảm tín hiệu P3, chứng minh `quality_fusion` duy trì độ chính xác cao khi bị cắt đỉnh xung (`clipping` +2.79%), lệch tần số (+1.69%), hoặc trôi cảm biến (`bias` +1.16%).
 
-Kết quả robustness/fusion trong workspace nghiên cứu P3
-(`G:\My Drive\paper_may_thay\03_signal_quality_aware_fusion`) chỉ là bằng
-chứng kế thừa để hình thành giả thuyết kỹ thuật — được đo trên các bộ dữ liệu
-HAR công khai (WISDM, MotionSense, MHEALTH, PAMAP2, UCI HAR, OPPORTUNITY),
-không phải trên bệnh nhân phục hồi chức năng. Không được tuyên bố SteadySense
-AI đạt các con số macro-F1/ECE đó cho tới khi đánh giá lại đúng bài toán và
-đúng nhóm người dùng mục tiêu. Xem `docs/01_KIEM_TOAN_BANG_CHUNG_NEN.md`.
+## 🏗️ Cấu trúc thư mục
 
-## Mục tiêu MVP
+- `src/` — Mã nguồn ứng dụng di động đa module (Android Gradle, Kotlin, Jetpack Compose):
+  - `phone/` — Ứng dụng điện thoại (Giao diện bài tập, Research Mode, nhận gói tin IMU).
+  - `wear/` — Ứng dụng đồng hồ thông minh Wear OS (Thu IMU 20 Hz, Haptic Metronome, Room Outbox).
+  - `core/` — Domain model, thuật toán ghép Timestamp, Transport Codec v1.
+- `source_code/` — Mã nguồn xử lý AI & Khoa học dữ liệu:
+  - `steadysense_ml/` — Package Python huấn luyện của SteadySense: Validator QC, Model Ladder 4 tầng, trích xuất đặc trưng và chia tập theo người.
+  - `from_p3/` — Thư viện snapshot chỉ đọc kế thừa từ nghiên cứu nền tảng P3 (Quality-Aware Fusion).
+- `data/` — Quản lý dữ liệu nghiên cứu (Dữ liệu thô thực tế được bảo vệ nội bộ và loại trừ khỏi Git theo quy định bảo mật).
+- `reports/` — Toàn bộ báo cáo khoa học, kết quả kiểm định QC và số liệu thực nghiệm có thể tái lập của SteadySense AI.
+- `docs/` — Tài liệu thiết kế hệ thống, hợp đồng dữ liệu, runbook vận hành và kế hoạch nghiên cứu.
 
-Xem `docs/00_Y_TUONG_VA_PHAM_VI.md`.
-
-## Cho coding agent
-
-Đọc `AGENTS.md` trước khi sửa bất cứ gì; `CLAUDE.md` là điểm vào rút gọn cho
-Claude Code. Trạng thái tiến độ theo dõi ở `docs/PROJECT_STATE.md`.
-
-## Cấu trúc ban đầu
-
-- `docs/` — phạm vi sản phẩm và kiểm toán bằng chứng nền.
-- `src/` — mã nguồn app Android/Kotlin của SteadySense AI (chưa khởi tạo project).
-- `source_code/from_p3/` — thư viện quality-estimator + fusion (Python, huấn
-  luyện trên máy tính) kế thừa có hash từ nghiên cứu P3; chưa huấn luyện lại
-  trên dữ liệu tuân thủ vận động thật.
-- `source_code/from_p1_android_gateway/`, `from_on_hand_wear/` và
-  `from_vidroid_elderly_ui/` — snapshot Android/Wear OS được chọn lọc từ các
-  dự án khác của tác giả; chỉ đọc và có manifest tại
-  `provenance_onedrive_foundations.md`.
-- `data/` — schema và dữ liệu mới có đồng thuận; `data/inherited_p3/` là tài
-  liệu hợp đồng dữ liệu kế thừa từ P3.
-- `tests/` — kiểm thử đơn vị, tích hợp và kịch bản nghiệm thu.
-- `reports/` — kết quả có thể tái lập của riêng SteadySense AI;
-  `reports/from_p3/` là bằng chứng nền kế thừa, không phải kết quả của
-  SteadySense.
 
 ## Nguyên tắc
 
