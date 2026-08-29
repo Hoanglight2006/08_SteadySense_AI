@@ -1,17 +1,9 @@
 # Trạng thái dự án SteadySense AI
 
-**Cập nhật thủ công gần nhất:** 14/08/2026
-**Giai đoạn:** triển khai nguyên mẫu nghiên cứu kỹ thuật không chuyên gia —
-project Android + Wear OS multi-module
-đã build và chạy trên cặp Samsung–Pixel Watch 2 thật; vertical slice Compose
-và luồng IMU timestamp → Room outbox → Data Layer → Room phone → ACK đã được
-smoke-test. G0 đã có văn bản khóa chính thức (chờ phê duyệt đạo đức thật) và
-pipeline huấn luyện Python (`source_code/steadysense_ml/`) đã chạy đầu-cuối
-trên dữ liệu **synthetic**. Research Mode phone–Wear, foreground collection,
-marker, export ZIP có SHA-256, validator QC và lệnh pipeline cho dữ liệu thật
-đã build/test/lint PASS cục bộ. **Vẫn chưa có dữ liệu tuân thủ vận động THẬT,
-chưa smoke-test bản Research Mode mới trên đủ cặp phone–watch, và chưa huấn
-luyện model nào trên dữ liệu thật.**
+**Cập nhật thủ công gần nhất:** 29/08/2026
+**Giai đoạn:** hoàn thành huấn luyện và benchmark Model Ladder trên **dữ liệu 12 người thật** (`P001` - `P012`). Pipeline đã qua validator QC, chia train/val/test theo người tham gia, hoàn thành đánh giá Tầng 1 (Rule-based), Tầng 2 (Cycle Counting), Tầng 3 (Raw 1D-CNN), Tầng 4 (Quality-Aware Fusion vs Fixed Fusion) và chạy trọn vẹn 46 kịch bản suy giảm tín hiệu (Degradation Benchmark) của P3.
+- Kết quả: `quality_fusion` đạt Test Macro-F1 0.8047 (vượt `fixed_fusion` 0.7649); khi lọc 30% mẫu tín hiệu kém (Coverage 70%), Macro-F1 vọt lên 0.8951 với rủi ro sai sót 7.2%.
+- Trọng số `.pt` và báo cáo đã được lưu tại `reports/student_runs/20260829_real_pilot/`.
 
 ## 1. Mục tiêu ngắn
 
