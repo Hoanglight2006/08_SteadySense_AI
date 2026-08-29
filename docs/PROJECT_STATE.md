@@ -1,6 +1,6 @@
 # Trạng thái dự án SteadySense AI
 
-**Cập nhật thủ công gần nhất:** 14/08/2026
+**Cập nhật thủ công gần nhất:** 29/08/2026
 **Giai đoạn:** triển khai nguyên mẫu nghiên cứu kỹ thuật không chuyên gia —
 project Android + Wear OS multi-module
 đã build và chạy trên cặp Samsung–Pixel Watch 2 thật; vertical slice Compose
@@ -170,6 +170,23 @@ thực tiễn và bị chặn phát hành do giấy phép `On_Hand_6` chưa xác
 - `reports/device_runs/20260814_research_mode_phone_smoke/`: phone APK mới cài
   và khởi chạy PASS trên Samsung, không có FATAL; UI bị chặn bởi lock screen
   và Watch endpoint cũ timeout nên chưa coi Research Mode end-to-end là PASS.
+- **29/08/2026 — Thu dữ liệu P008 (5 điều kiện trên SM-R905N):** đã thu thành
+  công `NORMAL_WEAR`, `LOOSE_STRAP`, `ROTATED`, `REST`, `DAILY_ACTIVITY_DISTRACTOR`
+  qua Research Mode end-to-end. Tất cả 5 phiên QC đạt: coverage=1.000,
+  duplicate_timestamps=0, backward_timestamps=0, max_gap≈0.040s. Đây là
+  kiểm chứng phần mềm thu dữ liệu thật trên người khỏe mạnh với đồng ý tham
+  gia; không phải kết luận nghiên cứu/lâm sàng.
+- **29/08/2026 — Sửa lỗi hiển thị ACK = 0:** Xác định ACK = 0 là lỗi hiển thị
+  thuần túy (UI bug), không phải mất dữ liệu. Nguyên nhân: gói ACK từ Phone về
+  Đồng hồ bị rớt do lớp Bluetooth Play Services bị quá tải khi xử lý hàng chục
+  gói IMU_WINDOW đến liên tiếp. Đã sửa bằng hai thay đổi:
+  1. `WearDatabase.kt` — thêm `deleteOtherSessions(currentSessionId)` vào
+     `OutboxDao`, xóa gói tồn đọng của phiên cũ mỗi khi phiên mới bắt đầu.
+  2. `WearTransport.kt` — chuyển `inFlight` sang `ConcurrentHashMap<String, Long>`
+     lưu timestamp gửi; thêm timeout 5 giây tự giải phóng gói bị kẹt khi ACK
+     không về; tăng `limit` lấy gói lên 40.
+  3. `ResearchCollectionService.kt` — gọi `deleteOtherSessions` trong
+     `io.execute {}` bên trong `beginCollection` trước `retryPending`.
 
 ## 3. Quyết định đã chốt
 
