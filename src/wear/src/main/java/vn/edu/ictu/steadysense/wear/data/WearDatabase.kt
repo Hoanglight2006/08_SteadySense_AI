@@ -40,6 +40,9 @@ interface OutboxDao {
 
     @Query("DELETE FROM transport_outbox WHERE createdAtEpochMillis < :cutoffEpochMillis")
     fun deleteOlderThan(cutoffEpochMillis: Long): Int
+
+    @Query("DELETE FROM transport_outbox WHERE sessionId != :currentSessionId")
+    fun deleteOtherSessions(currentSessionId: String): Int
 }
 
 // Bảng nền tảng cho Research Mode (docs/06_KE_HOACH_CONG_CU_THU_DU_LIEU.md

@@ -1,6 +1,17 @@
 # Trạng thái dự án SteadySense AI
 
 **Cập nhật thủ công gần nhất:** 29/08/2026
+**Giai đoạn:** triển khai nguyên mẫu nghiên cứu kỹ thuật không chuyên gia —
+project Android + Wear OS multi-module
+đã build và chạy trên cặp Samsung–Pixel Watch 2 thật; vertical slice Compose
+và luồng IMU timestamp → Room outbox → Data Layer → Room phone → ACK đã được
+smoke-test. G0 đã có văn bản khóa chính thức (chờ phê duyệt đạo đức thật) và
+pipeline huấn luyện Python (`source_code/steadysense_ml/`) đã chạy đầu-cuối
+trên dữ liệu **synthetic**. Research Mode phone–Wear, foreground collection,
+marker, export ZIP có SHA-256, validator QC và lệnh pipeline cho dữ liệu thật
+đã build/test/lint PASS cục bộ. **Vẫn chưa có dữ liệu tuân thủ vận động THẬT,
+chưa smoke-test bản Research Mode mới trên đủ cặp phone–watch, và chưa huấn
+luyện model nào trên dữ liệu thật.**
 **Giai đoạn:** hoàn thành huấn luyện và benchmark Model Ladder trên **dữ liệu 12 người thật** (`P001` - `P012`). Pipeline đã qua validator QC, chia train/val/test theo người tham gia, hoàn thành đánh giá Tầng 1 (Rule-based), Tầng 2 (Cycle Counting), Tầng 3 (Raw 1D-CNN), Tầng 4 (Quality-Aware Fusion vs Fixed Fusion) và chạy trọn vẹn 46 kịch bản suy giảm tín hiệu (Degradation Benchmark) của P3.
 - Kết quả: `quality_fusion` đạt Test Macro-F1 0.8047 (vượt `fixed_fusion` 0.7649); khi lọc 30% mẫu tín hiệu kém (Coverage 70%), Macro-F1 vọt lên 0.8951 với rủi ro sai sót 7.2%.
 - Trọng số `.pt` và báo cáo đã được lưu tại `reports/student_runs/20260829_real_pilot/`.
@@ -162,6 +173,23 @@ thực tiễn và bị chặn phát hành do giấy phép `On_Hand_6` chưa xác
 - `reports/device_runs/20260814_research_mode_phone_smoke/`: phone APK mới cài
   và khởi chạy PASS trên Samsung, không có FATAL; UI bị chặn bởi lock screen
   và Watch endpoint cũ timeout nên chưa coi Research Mode end-to-end là PASS.
+- **29/08/2026 — Thu dữ liệu P008 (5 điều kiện trên SM-R905N):** đã thu thành
+  công `NORMAL_WEAR`, `LOOSE_STRAP`, `ROTATED`, `REST`, `DAILY_ACTIVITY_DISTRACTOR`
+  qua Research Mode end-to-end. Tất cả 5 phiên QC đạt: coverage=1.000,
+  duplicate_timestamps=0, backward_timestamps=0, max_gap≈0.040s. Đây là
+  kiểm chứng phần mềm thu dữ liệu thật trên người khỏe mạnh với đồng ý tham
+  gia; không phải kết luận nghiên cứu/lâm sàng.
+- **29/08/2026 — Sửa lỗi hiển thị ACK = 0:** Xác định ACK = 0 là lỗi hiển thị
+  thuần túy (UI bug), không phải mất dữ liệu. Nguyên nhân: gói ACK từ Phone về
+  Đồng hồ bị rớt do lớp Bluetooth Play Services bị quá tải khi xử lý hàng chục
+  gói IMU_WINDOW đến liên tiếp. Đã sửa bằng hai thay đổi:
+  1. `WearDatabase.kt` — thêm `deleteOtherSessions(currentSessionId)` vào
+     `OutboxDao`, xóa gói tồn đọng của phiên cũ mỗi khi phiên mới bắt đầu.
+  2. `WearTransport.kt` — chuyển `inFlight` sang `ConcurrentHashMap<String, Long>`
+     lưu timestamp gửi; thêm timeout 5 giây tự giải phóng gói bị kẹt khi ACK
+     không về; tăng `limit` lấy gói lên 40.
+  3. `ResearchCollectionService.kt` — gọi `deleteOtherSessions` trong
+     `io.execute {}` bên trong `beginCollection` trước `retryPending`.
 
 ## 3. Quyết định đã chốt
 

@@ -153,7 +153,13 @@ class ResearchCollectionService : Service(), SensorEventListener {
             startMetronome(config.tempoBpm)
         }
         WearResearchState.snapshot = ResearchCollectionSnapshot(true, sessionId, config.participantCode)
-        WearSender.retryPending(this)
+        // Xóa gói tồn đọng của các phiên cũ trên IO thread (Room không cho phép truy vấn DB
+        // trên Main thread). Sau khi xóa mới gọi retryPending để đồng hồ chỉ gửi gói của
+        // phiên hiện tại, tránh nghẽn HOL (Head-of-Line Blocking).
+        io.execute {
+            WearDatabase.get(this).outboxDao().deleteOtherSessions(sessionId)
+            WearSender.retryPending(this)
+        }
     }
 
     override fun onSensorChanged(event: SensorEvent) {
