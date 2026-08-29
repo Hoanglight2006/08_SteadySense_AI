@@ -9,7 +9,7 @@ bị đeo lỏng hoặc lệch vị trí, vấn đề thường gặp ở nhóm 
 ## Trạng thái
 
 - **Giai đoạn hiện tại:** Đã hoàn thành triển khai nguyên mẫu Android & Wear OS (Jetpack Compose, Room v2, Data Layer Transport) và hoàn tất kiểm thử thực nghiệm trên tập dữ liệu **12 người tham gia khỏe mạnh (`P001` - `P012`)**.
-- **Kết quả thực nghiệm chính (Test Split độc lập theo người):**
+- **Kết quả thực nghiệm chính:**
   - **Tầng 1 (Rule-based):** Bị "mù" trước hiện tượng đeo lỏng/xoay lệch (vẫn báo tin cậy >97%).
   - **Tầng 3 (Raw 1D-CNN):** Rớt Macro-F1 xuống **0.597** do biến thiên dữ liệu giữa các đối tượng.
   - **Tầng 4 (Quality-Aware Fusion):** Đạt Macro-F1 **0.8047** (vượt trội hơn `fixed_fusion` 0.7649).
