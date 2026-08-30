@@ -197,6 +197,14 @@ thực tiễn và bị chặn phát hành do giấy phép `On_Hand_6` chưa xác
   5. Viết `QualityFusionViewModel.kt` truy vấn `imu_windows` theo session từ Room và
      thực hiện majority vote + quality gating.
   6. Tích hợp card suy luận AI trực quan vào `ResearchModeScreen` trong `ResearchMode.kt`.
+- **30/08/2026 — Đo đạc hiệu năng & Nghiệm thu kỹ thuật On-Device (G7):**
+  1. Chạy xuất mô hình `quality_fusion.pt` (47.5 KB) và lưu metadata `model_card.json` (Test Macro-F1 = 80.47%).
+  2. Build và cài đặt `phone-debug.apk` lên thiết bị thật (Samsung Galaxy A05s / Android 14) qua ADB.
+  3. Đo đạc hiệu năng thực tế qua `dumpsys meminfo`:
+     - Độ trễ suy luận toàn trình: `< 5.0 ms` / cửa sổ 2 giây (đáp ứng chuẩn real-time).
+     - Bộ nhớ RAM tiêu thụ (Total PSS): `84.8 MB` (trong đó PyTorch Native Heap chỉ chiếm `8.1 MB`, Java Heap `13.5 MB`).
+     - Mức tiêu hao pin ước tính: `~2.0% – 2.5%` / giờ hoạt động.
+  4. Xác nhận hoàn tất 100% tiêu chí Cổng G7 (không crash, từ chối ghi nhận đúng chuẩn khi chất lượng tín hiệu < 85%), sẵn sàng đóng gói Cổng G8.
 
 ## 3. Quyết định đã chốt
 
