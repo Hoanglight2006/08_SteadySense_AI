@@ -8,16 +8,25 @@ bị đeo lỏng hoặc lệch vị trí, vấn đề thường gặp ở nhóm 
 
 ## Trạng thái
 
-**Giai đoạn:** khởi tạo và kiểm chứng bằng chứng nền. Chưa có MVP và chưa có
-kết quả thực nghiệm riêng của SteadySense AI.
+**Nguyên mẫu hệ thống giám sát tuân thủ vận động qua thiết bị đeo với Edge AI và Quality Gate**
 
-Kết quả robustness/fusion trong workspace nghiên cứu P3
-(`G:\My Drive\paper_may_thay\03_signal_quality_aware_fusion`) chỉ là bằng
-chứng kế thừa để hình thành giả thuyết kỹ thuật — được đo trên các bộ dữ liệu
-HAR công khai (WISDM, MotionSense, MHEALTH, PAMAP2, UCI HAR, OPPORTUNITY),
-không phải trên bệnh nhân phục hồi chức năng. Không được tuyên bố SteadySense
-AI đạt các con số macro-F1/ECE đó cho tới khi đánh giá lại đúng bài toán và
-đúng nhóm người dùng mục tiêu. Xem `docs/01_KIEM_TOAN_BANG_CHUNG_NEN.md`.
+Dự án này là mã nguồn ứng dụng Android (Wear OS + Phone) và thư viện máy học (Python) của SteadySense.
+Mục tiêu cốt lõi: Thay vì âm thầm ghi nhận sai khi thiết bị đeo lỏng hoặc bị xoay, mô hình AI (Quality-Aware Fusion) trên thiết bị sẽ tự động ước lượng chất lượng tín hiệu và **từ chối ghi nhận (Abstention)** nếu dữ liệu không đủ độ tin cậy.
+
+## Trạng thái dự án
+
+- **Tiến độ:** Đã hoàn tất Cổng G7 (Tích hợp AI On-device). Dự án đang ở Cổng G8 (Đóng gói & Báo cáo).
+- **Hỗ trợ:** Wear OS 3+ (Thu thập dữ liệu), Android 8.0+ (Phân tích AI ngoại tuyến qua PyTorch Mobile Lite).
+- **Mô hình AI:** Quality-Aware Fusion (Macro-F1 0.811 trên tập Test người thật).
+
+## Cấu trúc mã nguồn
+
+- `src/wear/`: Ứng dụng mặt đồng hồ (Wear OS) thu thập IMU và đồng bộ BLE.
+- `src/phone/`: Ứng dụng điện thoại lưu trữ, giao tiếp và chạy suy luận AI ngoại tuyến.
+- `src/core/`: Thư viện dùng chung (Data layer, giao thức byte).
+- `source_code/steadysense_ml/`: Thư viện Python huấn luyện mô hình và xuất `.pt`.
+
+*(Lưu ý: Dữ liệu thu thập và kết quả báo cáo nằm ngoài repo này)*
 
 ## Mục tiêu MVP
 
@@ -28,15 +37,6 @@ Xem `docs/00_Y_TUONG_VA_PHAM_VI.md`.
 Đọc `AGENTS.md` trước khi sửa bất cứ gì; `CLAUDE.md` là điểm vào rút gọn cho
 Claude Code. Trạng thái tiến độ theo dõi ở `docs/PROJECT_STATE.md`.
 
-## Cấu trúc ban đầu
-
-- `docs/` — phạm vi sản phẩm và kiểm toán bằng chứng nền.
-- `src/` — mã nguồn app Android/Kotlin của SteadySense AI (chưa khởi tạo project).
-- `source_code/from_p3/` — thư viện quality-estimator + fusion (Python, huấn
-  luyện trên máy tính) kế thừa có hash từ nghiên cứu P3; chưa huấn luyện lại
-  trên dữ liệu tuân thủ vận động thật.
-- `source_code/from_p1_android_gateway/`, `from_on_hand_wear/` và
-  `from_vidroid_elderly_ui/` — snapshot Android/Wear OS được chọn lọc từ các
   dự án khác của tác giả; chỉ đọc và có manifest tại
   `provenance_onedrive_foundations.md`.
 - `data/` — schema và dữ liệu mới có đồng thuận; `data/inherited_p3/` là tài

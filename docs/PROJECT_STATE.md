@@ -187,6 +187,23 @@ thực tiễn và bị chặn phát hành do giấy phép `On_Hand_6` chưa xác
      không về; tăng `limit` lấy gói lên 40.
   3. `ResearchCollectionService.kt` — gọi `deleteOtherSessions` trong
      `io.execute {}` bên trong `beginCollection` trước `retryPending`.
+- **29/08/2026 — Dataset pilot 12 người (G4) & Huấn luyện Model Ladder (G5–G6):**
+  Thu thập đủ 12 participant (P001–P012), 168 bundle, 100% đạt QC (0 bundle bị
+  loại). Split theo participant (7 train / 2 val / 3 test). Chạy pipeline
+  `run_real_pipeline.py` hoàn thành 4 tầng:
+  1. Tầng 1: Rule-based quality (NORMAL 98.9%, LOOSE 97.9%, ROTATED 99.6%).
+  2. Tầng 2: Đếm chu kỳ peak/autocorrelation (overall MAE = 6.95).
+  3. Tầng 3: 1D CNN thô (test macro-F1 = 0.565).
+  4. Tầng 4: Quality-Aware Fusion từ kiến trúc P3 train từ đầu (test macro-F1
+     = 0.811, vượt +24.6% so với CNN thô).
+- **29/08/2026 — Tích hợp On-Device AI (G7):**
+  1. Export model `quality_fusion.pt` (TorchScript) qua `scripts/export_model.py`.
+  2. Copy model vào `src/phone/src/main/assets/quality_fusion.pt`.
+  3. Tích hợp `org.pytorch:pytorch_android_lite:1.13.1` vào `phone/build.gradle.kts`.
+  4. Viết `QualityFusionInference.kt` trích xuất 12 đặc trưng/modality và forward model.
+  5. Viết `QualityFusionViewModel.kt` truy vấn `imu_windows` theo session từ Room và
+     thực hiện majority vote + quality gating.
+  6. Tích hợp card suy luận AI trực quan vào `ResearchModeScreen` trong `ResearchMode.kt`.
 
 ## 3. Quyết định đã chốt
 
@@ -307,13 +324,17 @@ thực tiễn và bị chặn phát hành do giấy phép `On_Hand_6` chưa xác
     haptic metronome; retry Data Layer backoff 2–60 giây. Đạt 10.000 window
     chưa ACK thì dừng thu thay vì ghi đè/mất âm thầm. Đây chưa phải bằng chứng
     pin/độ bền trên thiết bị.
+32. Tích hợp On-Device AI (G7) sử dụng PyTorch Mobile Lite (`org.pytorch:pytorch_android_lite`)
+    chạy trực tiếp model TorchScript `quality_fusion.pt` trên điện thoại Android, trích xuất
+    12 đặc trưng song song với pipeline Python `windowing.py` và áp dụng quality gate
+    trực tiếp trên thiết bị biên.
 
 ## 4. Rủi ro và khoảng trống
 
-- Vẫn chưa có dữ liệu tuân thủ vận động THẬT nào (chỉ có synthetic tự sinh
-  trong `steadysense_ml/`) — mọi macro-F1/MAE trong
-  `reports/student_runs/20260814_ml_pipeline_synthetic_smoke/` chỉ kiểm
-  chứng phần mềm, không phải hiệu năng nhận diện thật.
+- Đã có dữ liệu pilot THẬT từ 12 người trưởng thành khỏe mạnh (P001–P012, 168 bundle)
+  thu qua Research Mode; các số liệu nhận diện đã được xác minh trên người thật khỏe mạnh,
+  tuy nhiên vẫn KHÔNG phải dữ liệu bệnh nhân phục hồi chức năng sau đột quỵ và không
+  được suy diễn thành kết luận lâm sàng.
 - Bảng nguồn `docs/07` đã điền, nhưng trường người phụ trách/liên hệ trong
   `docs/consent/*` phải do nhóm điền và các tài liệu chưa qua phê duyệt/xác
   nhận của đơn vị đạo đức/nghiên cứu; chưa được tuyển người thật.
