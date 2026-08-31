@@ -36,6 +36,9 @@ interface ImuWindowDao {
 
     @Query("SELECT * FROM imu_windows WHERE sessionId = :sessionId ORDER BY sequenceId")
     fun forSession(sessionId: String): List<ImuWindowEntity>
+
+    @Query("SELECT * FROM imu_windows WHERE sessionId = :sessionId ORDER BY sequenceId DESC LIMIT :limit")
+    fun latestBySession(sessionId: String, limit: Int): List<ImuWindowEntity>
 }
 
 // Schema Research Mode v2 — chỉ nền tảng (entity + DAO + migration test), CHƯA

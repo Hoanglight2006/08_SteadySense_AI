@@ -1,0 +1,11 @@
+{
+  "model_name": "quality_fusion",
+  "modalities": 2,
+  "embedding_dim": 12,
+  "classes": 3,
+  "seed": 42,
+  "epochs": 20,
+  "train_macro_f1": 0.8296307005482167,
+  "val_macro_f1": 0.8588896822921495,
+  "test_macro_f1": 0.804684354107431
+}

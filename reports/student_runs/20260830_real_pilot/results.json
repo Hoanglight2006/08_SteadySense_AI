@@ -1,0 +1,323 @@
+{
+  "data_root": "C:\\Users\\Admin\\Downloads\\tailieutest\\data",
+  "participants": [
+    "P001",
+    "P002",
+    "P003",
+    "P004",
+    "P005",
+    "P006",
+    "P007",
+    "P008",
+    "P009",
+    "P010",
+    "P011",
+    "P012"
+  ],
+  "participant_split": {
+    "P001": "train",
+    "P008": "train",
+    "P007": "train",
+    "P010": "train",
+    "P012": "train",
+    "P004": "train",
+    "P006": "train",
+    "P003": "val",
+    "P005": "val",
+    "P011": "test",
+    "P002": "test",
+    "P009": "test"
+  },
+  "tier1_rule_based_quality": {
+    "NORMAL_WEAR": {
+      "window_count": 726,
+      "reliable_rate": 0.989
+    },
+    "LOOSE_STRAP": {
+      "window_count": 236,
+      "reliable_rate": 0.979
+    },
+    "ROTATED": {
+      "window_count": 236,
+      "reliable_rate": 0.996
+    },
+    "PACKET_LOSS_REPLAY": {
+      "window_count": 0,
+      "reliable_rate": null
+    },
+    "TIMING_JITTER_REPLAY": {
+      "window_count": 0,
+      "reliable_rate": null
+    },
+    "CLIPPING_REPLAY": {
+      "window_count": 0,
+      "reliable_rate": null
+    },
+    "REST": {
+      "window_count": 977,
+      "reliable_rate": 0.66
+    },
+    "DAILY_ACTIVITY_DISTRACTOR": {
+      "window_count": 1002,
+      "reliable_rate": 0.818
+    }
+  },
+  "tier2_cycle_counting": {
+    "overall_mae": 6.95,
+    "session_count": 120,
+    "mae_by_condition": {
+      "LOOSE_STRAP": 6.667,
+      "NORMAL_WEAR": 7.042,
+      "ROTATED": 6.958
+    }
+  },
+  "tier3_raw_cnn": {
+    "train": {
+      "macro_f1": 0.9406343031547614,
+      "count": 1908
+    },
+    "val": {
+      "macro_f1": 0.8244556686245352,
+      "count": 601
+    },
+    "test": {
+      "macro_f1": 0.5971855199576384,
+      "count": 668
+    }
+  },
+  "tier4_p3_fusion": {
+    "fixed_fusion": {
+      "model_name": "fixed_fusion",
+      "modalities": 2,
+      "embedding_dim": 12,
+      "train": {
+        "accuracy": 0.8349056603773585,
+        "macro_f1": 0.8182464761409101,
+        "ece": 0.034696241813385764,
+        "nll": 0.35887226462364197,
+        "brier": 0.23399944603443146,
+        "risk_coverage": [
+          {
+            "coverage": 1.0,
+            "risk": 0.1650943396226415,
+            "selective_macro_f1": 0.8182464761409101
+          },
+          {
+            "coverage": 0.90041928721174,
+            "risk": 0.13678696158323633,
+            "selective_macro_f1": 0.839722166483099
+          },
+          {
+            "coverage": 0.800314465408805,
+            "risk": 0.11656843483955469,
+            "selective_macro_f1": 0.8530230452591692
+          },
+          {
+            "coverage": 0.70020964360587,
+            "risk": 0.09131736526946108,
+            "selective_macro_f1": 0.8674391646679954
+          },
+          {
+            "coverage": 0.5,
+            "risk": 0.023060796645702306,
+            "selective_macro_f1": 0.6488924536638777
+          }
+        ],
+        "quality_error_auroc": 0.588153528831495,
+        "low_quality_macro_f1": 0.8059471595866072,
+        "low_quality_count": 1816,
+        "count": 1908
+      },
+      "val": {
+        "accuracy": 0.8452579034941764,
+        "macro_f1": 0.832992300469361,
+        "ece": 0.09924421378856094,
+        "nll": 0.43632495403289795,
+        "brier": 0.26847967505455017,
+        "risk_coverage": [
+          {
+            "coverage": 1.0,
+            "risk": 0.15474209650582363,
+            "selective_macro_f1": 0.832992300469361
+          },
+          {
+            "coverage": 0.9001663893510815,
+            "risk": 0.12754158964879853,
+            "selective_macro_f1": 0.855816647038684
+          },
+          {
+            "coverage": 0.800332778702163,
+            "risk": 0.12266112266112267,
+            "selective_macro_f1": 0.8620266324319176
+          },
+          {
+            "coverage": 0.7004991680532446,
+            "risk": 0.12114014251781473,
+            "selective_macro_f1": 0.8611880648530814
+          },
+          {
+            "coverage": 0.5008319467554077,
+            "risk": 0.08970099667774087,
+            "selective_macro_f1": 0.8162257495590829
+          }
+        ],
+        "quality_error_auroc": 0.5331470662941327,
+        "low_quality_macro_f1": 0.8230341827464129,
+        "low_quality_count": 583,
+        "count": 601
+      },
+      "test": {
+        "accuracy": 0.8053892215568862,
+        "macro_f1": 0.7649185512315535,
+        "ece": 0.03199214929949026,
+        "nll": 0.39358383417129517,
+        "brier": 0.25992363691329956,
+        "risk_coverage": [
+          {
+            "coverage": 1.0,
+            "risk": 0.19461077844311378,
+            "selective_macro_f1": 0.7649185512315535
+          },
+          {
+            "coverage": 0.9011976047904192,
+            "risk": 0.1760797342192691,
+            "selective_macro_f1": 0.7702570399308225
+          },
+          {
+            "coverage": 0.8008982035928144,
+            "risk": 0.13271028037383178,
+            "selective_macro_f1": 0.8118117132203154
+          },
+          {
+            "coverage": 0.7005988023952096,
+            "risk": 0.09829059829059829,
+            "selective_macro_f1": 0.8477450351128898
+          },
+          {
+            "coverage": 0.5,
+            "risk": 0.059880239520958084,
+            "selective_macro_f1": 0.6049153242461793
+          }
+        ],
+        "quality_error_auroc": 0.5413926222476408,
+        "low_quality_macro_f1": 0.735724471550585,
+        "low_quality_count": 639,
+        "count": 668
+      }
+    },
+    "quality_fusion": {
+      "model_name": "quality_fusion",
+      "modalities": 2,
+      "embedding_dim": 12,
+      "train": {
+        "accuracy": 0.8422431865828093,
+        "macro_f1": 0.8296307005482167,
+        "ece": 0.015455428565573134,
+        "nll": 0.3126775324344635,
+        "brier": 0.20883256196975708,
+        "risk_coverage": [
+          {
+            "coverage": 1.0,
+            "risk": 0.15775681341719078,
+            "selective_macro_f1": 0.8296307005482167
+          },
+          {
+            "coverage": 0.90041928721174,
+            "risk": 0.13038416763678695,
+            "selective_macro_f1": 0.8490842708352774
+          },
+          {
+            "coverage": 0.800314465408805,
+            "risk": 0.09757694826457106,
+            "selective_macro_f1": 0.8748178364641372
+          },
+          {
+            "coverage": 0.70020964360587,
+            "risk": 0.05763473053892216,
+            "selective_macro_f1": 0.9096241706298808
+          },
+          {
+            "coverage": 0.5,
+            "risk": 0.007337526205450734,
+            "selective_macro_f1": 0.6615611602018925
+          }
+        ],
+        "quality_error_auroc": 0.2408451810703587,
+        "count": 1908
+      },
+      "val": {
+        "accuracy": 0.8635607321131448,
+        "macro_f1": 0.8588896822921495,
+        "ece": 0.09906656556637233,
+        "nll": 0.3998624384403229,
+        "brier": 0.24404849112033844,
+        "risk_coverage": [
+          {
+            "coverage": 1.0,
+            "risk": 0.13643926788685523,
+            "selective_macro_f1": 0.8588896822921495
+          },
+          {
+            "coverage": 0.9001663893510815,
+            "risk": 0.11275415896487985,
+            "selective_macro_f1": 0.8799012943767726
+          },
+          {
+            "coverage": 0.800332778702163,
+            "risk": 0.09771309771309772,
+            "selective_macro_f1": 0.896025094946553
+          },
+          {
+            "coverage": 0.7004991680532446,
+            "risk": 0.09738717339667459,
+            "selective_macro_f1": 0.8940052925183036
+          },
+          {
+            "coverage": 0.5008319467554077,
+            "risk": 0.07641196013289037,
+            "selective_macro_f1": 0.7390063631046279
+          }
+        ],
+        "quality_error_auroc": 0.384369566239015,
+        "count": 601
+      },
+      "test": {
+        "accuracy": 0.8293413173652695,
+        "macro_f1": 0.804684354107431,
+        "ece": 0.044509887338398446,
+        "nll": 0.35115543007850647,
+        "brier": 0.22913391888141632,
+        "risk_coverage": [
+          {
+            "coverage": 1.0,
+            "risk": 0.17065868263473055,
+            "selective_macro_f1": 0.804684354107431
+          },
+          {
+            "coverage": 0.9011976047904192,
+            "risk": 0.1362126245847176,
+            "selective_macro_f1": 0.8342520548148809
+          },
+          {
+            "coverage": 0.8008982035928144,
+            "risk": 0.09906542056074766,
+            "selective_macro_f1": 0.8706251419532819
+          },
+          {
+            "coverage": 0.7005988023952096,
+            "risk": 0.07264957264957266,
+            "selective_macro_f1": 0.8951069847154184
+          },
+          {
+            "coverage": 0.5,
+            "risk": 0.023952095808383235,
+            "selective_macro_f1": 0.6429321571098509
+          }
+        ],
+        "quality_error_auroc": 0.27006143517638864,
+        "count": 668
+      }
+    }
+  },
+  "seed": 42
+}

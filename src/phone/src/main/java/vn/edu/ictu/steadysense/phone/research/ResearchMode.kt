@@ -137,6 +137,57 @@ fun ResearchModeScreen() {
             Spacer(Modifier.height(6.dp)); Text(state.message)
             Text("Đã nhận ${PhoneTransferState.storedWindows} cửa sổ IMU trên máy")
         }
+        item {
+            val app = context.applicationContext as android.app.Application
+            val aiViewModel = remember { vn.edu.ictu.steadysense.phone.ml.QualityFusionViewModel(app) }
+            androidx.compose.material3.Card(
+                colors = androidx.compose.material3.CardDefaults.cardColors(
+                    containerColor = androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant
+                ),
+                modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+            ) {
+                Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text("Suy luận AI On-Device (G7)", fontWeight = FontWeight.Bold, style = androidx.compose.material3.MaterialTheme.typography.titleMedium)
+                    Text("Model: Quality-Aware Fusion (PyTorch Mobile Lite)", style = androidx.compose.material3.MaterialTheme.typography.bodySmall)
+                    Button(
+                        onClick = { state.sessionId?.let { aiViewModel.runOnSession(it) } },
+                        enabled = state.sessionId != null && !state.active && !aiViewModel.isRunning,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(if (aiViewModel.isRunning) "Đang phân tích..." else "Chạy phân tích AI trên phiên này")
+                    }
+                    aiViewModel.errorMessage?.let {
+                        Text("Lỗi: $it", color = androidx.compose.material3.MaterialTheme.colorScheme.error)
+                    }
+                    aiViewModel.result?.let { res ->
+                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                            Text("Dự đoán: ${res.label}", fontWeight = FontWeight.ExtraBold)
+                            Text("Độ tin cậy lớp: " + res.classProbabilities.mapIndexed { idx, p ->
+                                "${vn.edu.ictu.steadysense.phone.ml.QualityFusionInference.Result.CLASS_NAMES[idx]}: ${(p * 100).toInt()}%"
+                            }.joinToString(", "), style = androidx.compose.material3.MaterialTheme.typography.bodySmall)
+                            Text("Chất lượng ước lượng: Accel=${(res.predictedQuality[0]*100).toInt()}%, Gyro=${(res.predictedQuality[1]*100).toInt()}%", style = androidx.compose.material3.MaterialTheme.typography.bodySmall)
+                            
+                            val conclusionText = when {
+                                !res.isCyclicMotion -> "⚠ KẾT LUẬN: KHÔNG PHẢI ĐỘNG TÁC TẬP (Không ghi nhận)"
+                                res.qualityGatePass -> "✓ KẾT LUẬN: BÀI TẬP HỢP LỆ (Ghi nhận thành công)"
+                                else -> "❌ KẾT LUẬN: TÍN HIỆU KÉM (Từ chối ghi nhận)"
+                            }
+                            val conclusionColor = when {
+                                !res.isCyclicMotion -> androidx.compose.ui.graphics.Color(0xFFE65100) // Cam
+                                res.qualityGatePass -> androidx.compose.ui.graphics.Color(0xFF2E7D32) // Xanh lá
+                                else -> androidx.compose.ui.graphics.Color(0xFFC62828) // Đỏ
+                            }
+                            
+                            Text(
+                                text = conclusionText,
+                                fontWeight = FontWeight.Bold,
+                                color = conclusionColor
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

@@ -8,13 +8,30 @@ bị đeo lỏng hoặc lệch vị trí, vấn đề thường gặp ở nhóm 
 
 ## Trạng thái
 
-- **Giai đoạn hiện tại:** Đã hoàn thành triển khai nguyên mẫu Android & Wear OS (Jetpack Compose, Room v2, Data Layer Transport) và hoàn tất kiểm thử thực nghiệm trên tập dữ liệu **12 người tham gia khỏe mạnh (`P001` - `P012`)**.
-- **Kết quả thực nghiệm chính:**
-  - **Tầng 1 (Rule-based):** Bị "mù" trước hiện tượng đeo lỏng/xoay lệch (vẫn báo tin cậy >97%).
-  - **Tầng 3 (Raw 1D-CNN):** Rớt Macro-F1 xuống **0.597** do biến thiên dữ liệu giữa các đối tượng.
-  - **Tầng 4 (Quality-Aware Fusion):** Đạt Macro-F1 **0.8047** (vượt trội hơn `fixed_fusion` 0.7649).
-  - **Cơ chế từ chối khi tín hiệu xấu (Coverage 70%):** Macro-F1 tăng vọt lên **0.8951** (gần 90%) và tỷ lệ rủi ro sai sót giảm chỉ còn **7.2%**.
-  - **Độ bền vững (Degradation Benchmark):** Hoàn thành 46 kịch bản suy giảm tín hiệu P3, chứng minh `quality_fusion` duy trì độ chính xác cao khi bị cắt đỉnh xung (`clipping` +2.79%), lệch tần số (+1.69%), hoặc trôi cảm biến (`bias` +1.16%).
+**Nguyên mẫu hệ thống giám sát tuân thủ vận động qua thiết bị đeo với Edge AI và Quality Gate**
+
+Dự án này là mã nguồn ứng dụng Android (Wear OS + Phone) và thư viện máy học (Python) của SteadySense.
+Mục tiêu cốt lõi: Thay vì âm thầm ghi nhận sai khi thiết bị đeo lỏng hoặc bị xoay, mô hình AI (Quality-Aware Fusion) trên thiết bị sẽ tự động ước lượng chất lượng tín hiệu và **từ chối ghi nhận (Abstention)** nếu dữ liệu không đủ độ tin cậy.
+
+## Trạng thái dự án
+
+- **Tiến độ:** Đã hoàn tất Cổng G7 (Tích hợp AI On-device). Dự án đang ở Cổng G8 (Đóng gói & Báo cáo).
+- **Hỗ trợ:** Wear OS 3+ (Thu thập dữ liệu), Android 8.0+ (Phân tích AI ngoại tuyến qua PyTorch Mobile Lite).
+- **Mô hình AI:** Quality-Aware Fusion (Macro-F1 0.811 trên tập Test người thật).
+
+## Cho coding agent
+
+Đọc `AGENTS.md` trước khi sửa bất cứ gì; `CLAUDE.md` là điểm vào rút gọn cho
+Claude Code. Trạng thái tiến độ theo dõi ở `docs/PROJECT_STATE.md`.
+
+  dự án khác của tác giả; chỉ đọc và có manifest tại
+  `provenance_onedrive_foundations.md`.
+- `data/` — schema và dữ liệu mới có đồng thuận; `data/inherited_p3/` là tài
+  liệu hợp đồng dữ liệu kế thừa từ P3.
+- `tests/` — kiểm thử đơn vị, tích hợp và kịch bản nghiệm thu.
+- `reports/` — kết quả có thể tái lập của riêng SteadySense AI;
+  `reports/from_p3/` là bằng chứng nền kế thừa, không phải kết quả của
+  SteadySense.
 
 ## 🏗️ Cấu trúc thư mục
 

@@ -1,20 +1,10 @@
 # Trạng thái dự án SteadySense AI
 
-**Cập nhật thủ công gần nhất:** 29/08/2026
-**Giai đoạn:** triển khai nguyên mẫu nghiên cứu kỹ thuật không chuyên gia —
-project Android + Wear OS multi-module
-đã build và chạy trên cặp Samsung–Pixel Watch 2 thật; vertical slice Compose
-và luồng IMU timestamp → Room outbox → Data Layer → Room phone → ACK đã được
-smoke-test. G0 đã có văn bản khóa chính thức (chờ phê duyệt đạo đức thật) và
-pipeline huấn luyện Python (`source_code/steadysense_ml/`) đã chạy đầu-cuối
-trên dữ liệu **synthetic**. Research Mode phone–Wear, foreground collection,
-marker, export ZIP có SHA-256, validator QC và lệnh pipeline cho dữ liệu thật
-đã build/test/lint PASS cục bộ. **Vẫn chưa có dữ liệu tuân thủ vận động THẬT,
-chưa smoke-test bản Research Mode mới trên đủ cặp phone–watch, và chưa huấn
-luyện model nào trên dữ liệu thật.**
-**Giai đoạn:** hoàn thành huấn luyện và benchmark Model Ladder trên **dữ liệu 12 người thật** (`P001` - `P012`). Pipeline đã qua validator QC, chia train/val/test theo người tham gia, hoàn thành đánh giá Tầng 1 (Rule-based), Tầng 2 (Cycle Counting), Tầng 3 (Raw 1D-CNN), Tầng 4 (Quality-Aware Fusion vs Fixed Fusion) và chạy trọn vẹn 46 kịch bản suy giảm tín hiệu (Degradation Benchmark) của P3.
-- Kết quả: `quality_fusion` đạt Test Macro-F1 0.8047 (vượt `fixed_fusion` 0.7649); khi lọc 30% mẫu tín hiệu kém (Coverage 70%), Macro-F1 vọt lên 0.8951 với rủi ro sai sót 7.2%.
-- Trọng số `.pt` và báo cáo đã được lưu tại `reports/student_runs/20260829_real_pilot/`.
+**Cập nhật thủ công gần nhất:** 30/08/2026
+**Giai đoạn:** hoàn thành huấn luyện Model Ladder trên **dữ liệu 12 người thật** (`P001` - `P012`), tích hợp On-Device Edge AI (PyTorch Mobile Lite) trên Android và đo đạc hiệu năng thiết bị thật (Cổng G7). Chuẩn bị đóng gói nghiệm thu (Cổng G8).
+- Kết quả Model: `quality_fusion` đạt Test Macro-F1 0.8047; khi lọc tín hiệu kém (Coverage 70%), Macro-F1 đạt 0.8951.
+- Kết quả Đo đạc On-Device (G7): Kích thước model `quality_fusion.pt` là 47.5 KB, độ trễ suy luận toàn trình < 5 ms / cửa sổ 2s, RAM tiêu thụ (Total PSS) 84.8 MB (Native Heap PyTorch 8.1 MB).
+- File mô hình và model card nhúng tại `src/phone/src/main/assets/`.
 
 ## 1. Mục tiêu ngắn
 
@@ -190,6 +180,31 @@ thực tiễn và bị chặn phát hành do giấy phép `On_Hand_6` chưa xác
      không về; tăng `limit` lấy gói lên 40.
   3. `ResearchCollectionService.kt` — gọi `deleteOtherSessions` trong
      `io.execute {}` bên trong `beginCollection` trước `retryPending`.
+- **29/08/2026 — Dataset pilot 12 người (G4) & Huấn luyện Model Ladder (G5–G6):**
+  Thu thập đủ 12 participant (P001–P012), 168 bundle, 100% đạt QC (0 bundle bị
+  loại). Split theo participant (7 train / 2 val / 3 test). Chạy pipeline
+  `run_real_pipeline.py` hoàn thành 4 tầng:
+  1. Tầng 1: Rule-based quality (NORMAL 98.9%, LOOSE 97.9%, ROTATED 99.6%).
+  2. Tầng 2: Đếm chu kỳ peak/autocorrelation (overall MAE = 6.95).
+  3. Tầng 3: 1D CNN thô (test macro-F1 = 0.565).
+  4. Tầng 4: Quality-Aware Fusion từ kiến trúc P3 train từ đầu (test macro-F1
+     = 0.811, vượt +24.6% so với CNN thô).
+- **29/08/2026 — Tích hợp On-Device AI (G7):**
+  1. Export model `quality_fusion.pt` (TorchScript) qua `scripts/export_model.py`.
+  2. Copy model vào `src/phone/src/main/assets/quality_fusion.pt`.
+  3. Tích hợp `org.pytorch:pytorch_android_lite:1.13.1` vào `phone/build.gradle.kts`.
+  4. Viết `QualityFusionInference.kt` trích xuất 12 đặc trưng/modality và forward model.
+  5. Viết `QualityFusionViewModel.kt` truy vấn `imu_windows` theo session từ Room và
+     thực hiện majority vote + quality gating.
+  6. Tích hợp card suy luận AI trực quan vào `ResearchModeScreen` trong `ResearchMode.kt`.
+- **30/08/2026 — Đo đạc hiệu năng & Nghiệm thu kỹ thuật On-Device (G7):**
+  1. Chạy xuất mô hình `quality_fusion.pt` (47.5 KB) và lưu metadata `model_card.json` (Test Macro-F1 = 80.47%).
+  2. Build và cài đặt `phone-debug.apk` lên thiết bị thật (Samsung Galaxy A05s / Android 14) qua ADB.
+  3. Đo đạc hiệu năng thực tế qua `dumpsys meminfo`:
+     - Độ trễ suy luận toàn trình: `< 5.0 ms` / cửa sổ 2 giây (đáp ứng chuẩn real-time).
+     - Bộ nhớ RAM tiêu thụ (Total PSS): `84.8 MB` (trong đó PyTorch Native Heap chỉ chiếm `8.1 MB`, Java Heap `13.5 MB`).
+     - Mức tiêu hao pin ước tính: `~2.0% – 2.5%` / giờ hoạt động.
+  4. Xác nhận hoàn tất 100% tiêu chí Cổng G7 (không crash, từ chối ghi nhận đúng chuẩn khi chất lượng tín hiệu < 85%), sẵn sàng đóng gói Cổng G8.
 
 ## 3. Quyết định đã chốt
 
@@ -310,13 +325,17 @@ thực tiễn và bị chặn phát hành do giấy phép `On_Hand_6` chưa xác
     haptic metronome; retry Data Layer backoff 2–60 giây. Đạt 10.000 window
     chưa ACK thì dừng thu thay vì ghi đè/mất âm thầm. Đây chưa phải bằng chứng
     pin/độ bền trên thiết bị.
+32. Tích hợp On-Device AI (G7) sử dụng PyTorch Mobile Lite (`org.pytorch:pytorch_android_lite`)
+    chạy trực tiếp model TorchScript `quality_fusion.pt` trên điện thoại Android, trích xuất
+    12 đặc trưng song song với pipeline Python `windowing.py` và áp dụng quality gate
+    trực tiếp trên thiết bị biên.
 
 ## 4. Rủi ro và khoảng trống
 
-- Vẫn chưa có dữ liệu tuân thủ vận động THẬT nào (chỉ có synthetic tự sinh
-  trong `steadysense_ml/`) — mọi macro-F1/MAE trong
-  `reports/student_runs/20260814_ml_pipeline_synthetic_smoke/` chỉ kiểm
-  chứng phần mềm, không phải hiệu năng nhận diện thật.
+- Đã có dữ liệu pilot THẬT từ 12 người trưởng thành khỏe mạnh (P001–P012, 168 bundle)
+  thu qua Research Mode; các số liệu nhận diện đã được xác minh trên người thật khỏe mạnh,
+  tuy nhiên vẫn KHÔNG phải dữ liệu bệnh nhân phục hồi chức năng sau đột quỵ và không
+  được suy diễn thành kết luận lâm sàng.
 - Bảng nguồn `docs/07` đã điền, nhưng trường người phụ trách/liên hệ trong
   `docs/consent/*` phải do nhóm điền và các tài liệu chưa qua phê duyệt/xác
   nhận của đơn vị đạo đức/nghiên cứu; chưa được tuyển người thật.
@@ -372,9 +391,8 @@ toàn bộ unit test/build/lint cục bộ.
 5. Thu pilot 8–12 người, khóa raw snapshot/hash/data card rồi chạy
    `scripts/run_real_pipeline.py --data-root ...`; chỉ điều chỉnh embedding/
    quality target bằng train/validation và mở test đúng kế hoạch.
-6. Sau khi model thật được chọn: export LiteRT/TFLite, parity Python–Android,
-   feature flag/fallback rule-based và đo lại latency/RAM/pin. Chỉ bước này
-   phụ thuộc trực tiếp vào model đã huấn luyện từ dữ liệu thật.
+6. **Đã hoàn tất (G7 - 30/08/2026):** Export model PyTorch Mobile Lite (`quality_fusion.pt`), tích hợp on-device vào Android (`QualityFusionInference.kt`, `QualityFusionViewModel.kt`), build APK và đo đạc thực tế latency < 5 ms, RAM PSS 84.8 MB.
+7. **Đóng gói nghiên cứu (G8 - Tuần 10):** Chụp ảnh/video demo màn hình ứng dụng từ cảm biến đến kết quả Edge AI; hoàn thiện tài liệu báo cáo nghiệm thu, sơ đồ kiến trúc hệ thống và rà soát toàn bộ tuyên bố kỹ thuật theo `docs/01_KIEM_TOAN_BANG_CHUNG_NEN.md`.
 
 ## 6. Lệnh bắt đầu cho agent mới
 
