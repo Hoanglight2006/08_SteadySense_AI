@@ -19,19 +19,6 @@ Mục tiêu cốt lõi: Thay vì âm thầm ghi nhận sai khi thiết bị đeo
 - **Hỗ trợ:** Wear OS 3+ (Thu thập dữ liệu), Android 8.0+ (Phân tích AI ngoại tuyến qua PyTorch Mobile Lite).
 - **Mô hình AI:** Quality-Aware Fusion (Macro-F1 0.811 trên tập Test người thật).
 
-## Cấu trúc mã nguồn
-
-- `src/wear/`: Ứng dụng mặt đồng hồ (Wear OS) thu thập IMU và đồng bộ BLE.
-- `src/phone/`: Ứng dụng điện thoại lưu trữ, giao tiếp và chạy suy luận AI ngoại tuyến.
-- `src/core/`: Thư viện dùng chung (Data layer, giao thức byte).
-- `source_code/steadysense_ml/`: Thư viện Python huấn luyện mô hình và xuất `.pt`.
-
-*(Lưu ý: Dữ liệu thu thập và kết quả báo cáo nằm ngoài repo này)*
-
-## Mục tiêu MVP
-
-Xem `docs/00_Y_TUONG_VA_PHAM_VI.md`.
-
 ## Cho coding agent
 
 Đọc `AGENTS.md` trước khi sửa bất cứ gì; `CLAUDE.md` là điểm vào rút gọn cho
@@ -45,6 +32,20 @@ Claude Code. Trạng thái tiến độ theo dõi ở `docs/PROJECT_STATE.md`.
 - `reports/` — kết quả có thể tái lập của riêng SteadySense AI;
   `reports/from_p3/` là bằng chứng nền kế thừa, không phải kết quả của
   SteadySense.
+
+## 🏗️ Cấu trúc thư mục
+
+- `src/` — Mã nguồn ứng dụng di động đa module (Android Gradle, Kotlin, Jetpack Compose):
+  - `phone/` — Ứng dụng điện thoại (Giao diện bài tập, Research Mode, nhận gói tin IMU).
+  - `wear/` — Ứng dụng đồng hồ thông minh Wear OS (Thu IMU 20 Hz, Haptic Metronome, Room Outbox).
+  - `core/` — Domain model, thuật toán ghép Timestamp, Transport Codec v1.
+- `source_code/` — Mã nguồn xử lý AI & Khoa học dữ liệu:
+  - `steadysense_ml/` — Package Python huấn luyện của SteadySense: Validator QC, Model Ladder 4 tầng, trích xuất đặc trưng và chia tập theo người.
+  - `from_p3/` — Thư viện snapshot chỉ đọc kế thừa từ nghiên cứu nền tảng P3 (Quality-Aware Fusion).
+- `data/` — Quản lý dữ liệu nghiên cứu (Dữ liệu thô thực tế được bảo vệ nội bộ và loại trừ khỏi Git theo quy định bảo mật).
+- `reports/` — Toàn bộ báo cáo khoa học, kết quả kiểm định QC và số liệu thực nghiệm có thể tái lập của SteadySense AI.
+- `docs/` — Tài liệu thiết kế hệ thống, hợp đồng dữ liệu, runbook vận hành và kế hoạch nghiên cứu.
+
 
 ## Nguyên tắc
 
