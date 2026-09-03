@@ -6,8 +6,6 @@ hiệu cảm biến (IMU điện thoại/đồng hồ) theo thời gian thực v
 buổi tập là "đã hoàn thành" khi đủ tin cậy — thay vì âm thầm ghi sai khi thiết
 bị đeo lỏng hoặc lệch vị trí, vấn đề thường gặp ở nhóm bệnh nhân tay yếu/run.
 
-## Trạng thái
-
 **Nguyên mẫu hệ thống giám sát tuân thủ vận động qua thiết bị đeo với Edge AI và Quality Gate**
 
 Dự án này là mã nguồn ứng dụng Android (Wear OS + Phone) và thư viện máy học (Python) của SteadySense.
@@ -18,20 +16,6 @@ Mục tiêu cốt lõi: Thay vì âm thầm ghi nhận sai khi thiết bị đeo
 - **Tiến độ:** Đã hoàn tất Cổng G7 (Tích hợp AI On-device). Dự án đang ở Cổng G8 (Đóng gói & Báo cáo).
 - **Hỗ trợ:** Wear OS 3+ (Thu thập dữ liệu), Android 8.0+ (Phân tích AI ngoại tuyến qua PyTorch Mobile Lite).
 - **Mô hình AI:** Quality-Aware Fusion (Macro-F1 0.811 trên tập Test người thật).
-
-## Cho coding agent
-
-Đọc `AGENTS.md` trước khi sửa bất cứ gì; `CLAUDE.md` là điểm vào rút gọn cho
-Claude Code. Trạng thái tiến độ theo dõi ở `docs/PROJECT_STATE.md`.
-
-  dự án khác của tác giả; chỉ đọc và có manifest tại
-  `provenance_onedrive_foundations.md`.
-- `data/` — schema và dữ liệu mới có đồng thuận; `data/inherited_p3/` là tài
-  liệu hợp đồng dữ liệu kế thừa từ P3.
-- `tests/` — kiểm thử đơn vị, tích hợp và kịch bản nghiệm thu.
-- `reports/` — kết quả có thể tái lập của riêng SteadySense AI;
-  `reports/from_p3/` là bằng chứng nền kế thừa, không phải kết quả của
-  SteadySense.
 
 ## 🏗️ Cấu trúc thư mục
 
