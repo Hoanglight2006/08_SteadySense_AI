@@ -10,7 +10,7 @@ Tài liệu này nêu các quy định khi tham gia phát triển và đóng gó
 - Giấy phép: Các đóng góp mã nguồn được áp dụng giấy phép Apache License 2.0 của dự án.
 - Phân chia mã nguồn:
   - Thư mục `source_code/from_p3/` là snapshot chỉ đọc, không sửa đổi trực tiếp.
-  - Các thuật toán xử lý dữ liệu và máy học mới được đặt trong `source_code/steadysense_ml/`.
+  - Các thuật toán xử lý dữ liệu và học máy được đặt trong `source_code/steadysense_ml/`.
   - Mã nguồn ứng dụng di động được đặt trong `src/` (chia thành các module `phone`, `wear`, `core`).
 
 ---
