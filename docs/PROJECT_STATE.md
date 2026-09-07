@@ -1,9 +1,9 @@
 # Trạng thái dự án SteadySense AI
 
-**Cập nhật thủ công gần nhất:** 30/08/2026
-**Giai đoạn:** hoàn thành huấn luyện Model Ladder trên **dữ liệu 12 người thật** (`P001` - `P012`), tích hợp On-Device Edge AI (PyTorch Mobile Lite) trên Android và đo đạc hiệu năng thiết bị thật (Cổng G7). Chuẩn bị đóng gói nghiệm thu (Cổng G8).
+**Cập nhật thủ công gần nhất:** 07/09/2026
+**Giai đoạn:** hoàn thành huấn luyện Model Ladder trên dữ liệu 12 người thật (`P001` - `P012`), tích hợp On-Device PyTorch Mobile Lite trên Android (Cổng G7). Đã hoàn thiện hồ sơ dự thi PMMN: `LICENSE`, `CHANGELOG.md`, `DEPENDENCIES.md`, `docs/BUILD_AND_INSTALL.md`, `docs/TRAINING_AND_EXPERIMENTS.md`, `README.md`, Issue Templates và các quy định đóng góp (Cổng G8).
 - Kết quả Model: `quality_fusion` đạt Test Macro-F1 0.8047; khi lọc tín hiệu kém (Coverage 70%), Macro-F1 đạt 0.8951.
-- Kết quả Đo đạc On-Device (G7): Kích thước model `quality_fusion.pt` là 47.5 KB, độ trễ suy luận toàn trình < 5 ms / cửa sổ 2s, RAM tiêu thụ (Total PSS) 84.8 MB (Native Heap PyTorch 8.1 MB).
+- Kết quả Đo đạc On-Device (G7): Kích thước model `quality_fusion.pt` là 47.5 KB, độ trễ suy luận dưới 5 ms / cửa sổ 2s, RAM tiêu thụ (Total PSS) 84.8 MB (Native Heap PyTorch 8.1 MB).
 - File mô hình và model card nhúng tại `src/phone/src/main/assets/`.
 
 ## 1. Mục tiêu ngắn
@@ -205,6 +205,16 @@ thực tiễn và bị chặn phát hành do giấy phép `On_Hand_6` chưa xác
      - Bộ nhớ RAM tiêu thụ (Total PSS): `84.8 MB` (trong đó PyTorch Native Heap chỉ chiếm `8.1 MB`, Java Heap `13.5 MB`).
      - Mức tiêu hao pin ước tính: `~2.0% – 2.5%` / giờ hoạt động.
   4. Xác nhận hoàn tất 100% tiêu chí Cổng G7 (không crash, từ chối ghi nhận đúng chuẩn khi chất lượng tín hiệu < 85%), sẵn sàng đóng gói Cổng G8.
+- **07/09/2026 — Hoàn thiện tài liệu dự thi PMMN:**
+   1. Xuất bản `LICENSE` (Apache-2.0) tại thư mục gốc kèm Medical Disclaimer.
+   2. Xuất bản `CHANGELOG.md` theo chuẩn Keep a Changelog và Semantic Versioning.
+   3. Thêm mẫu báo lỗi trong `.github/ISSUE_TEMPLATE/` (`bug_report.md`, `feature_request.md`).
+   4. Kê khai danh mục thư viện phụ thuộc và bản quyền trong `DEPENDENCIES.md`.
+   5. Viết `docs/BUILD_AND_INSTALL.md` hướng dẫn biên dịch ứng dụng Android và cài đặt pipeline Python.
+   6. Viết `docs/TRAINING_AND_EXPERIMENTS.md` ghi nhận kết quả huấn luyện Model Ladder và phân tích thực tế: trường hợp lỏng dây kích hoạt từ chối dự đoán; trường hợp xoay lệch mặt đồng hồ là vấn đề xoay hệ trục tọa độ IMU.
+   7. Viết lại `README.md` bằng tiếng Việt theo cấu trúc gồm sơ đồ Mermaid, bảng thông số, kiến trúc và danh mục tài liệu.
+   8. Thêm `CONTRIBUTING.md` và `CODE_OF_CONDUCT.md`.
+   9. Thêm khối chú thích bản quyền Apache 2.0 (License Header) vào đầu toàn bộ 22 file mã nguồn Kotlin (`.kt`) trong `src/` (`src/core/`, `src/phone/`, `src/wear/`).
 
 ## 3. Quyết định đã chốt
 
@@ -329,6 +339,8 @@ thực tiễn và bị chặn phát hành do giấy phép `On_Hand_6` chưa xác
     chạy trực tiếp model TorchScript `quality_fusion.pt` trên điện thoại Android, trích xuất
     12 đặc trưng song song với pipeline Python `windowing.py` và áp dụng quality gate
     trực tiếp trên thiết bị biên.
+33. Giữ nguyên mã nguồn trong `source_code/` và `src/`, không sửa đổi snapshot kế thừa. Các thông tin bản quyền và giấy phép được quy định tại `LICENSE`, `DEPENDENCIES.md` và các manifest provenance.
+34. Ghi nhận thử nghiệm thực tế trên ứng dụng: tình huống lỏng dây (`LOOSE_STRAP`) kích hoạt từ chối dự đoán khi tín hiệu suy giảm cơ học; tình huống đeo chặt nhưng lệch trục (`ROTATED`) không gây rung lắc cơ học nên không kích hoạt từ chối, dẫn đến sai lệch góc cử động. Hướng xử lý tiếp theo: bổ sung đặc trưng magnitude invariant hoặc bước hiệu chuẩn tư thế ban đầu.
 
 ## 4. Rủi ro và khoảng trống
 
