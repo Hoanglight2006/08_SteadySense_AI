@@ -54,7 +54,7 @@ flowchart LR
 
 ## Kiến trúc Hệ thống
 
-### Ứng dụng Đồng hồ (Wear OS)
+### Ứng dụng đồng hồ (Wear OS)
 - Viết bằng Kotlin, target Android SDK 34, giao diện Jetpack Compose cho Wear OS.
 - Thu dữ liệu gia tốc kế và con quay hồi chuyển ở tần số 20 Hz qua Android `SensorManager`.
 - Bộ đệm ghép cặp timestamp hai hàng đợi cho accel và gyro với dung sai lệch dưới 30 ms.
@@ -62,14 +62,14 @@ flowchart LR
 - Cơ chế bắt tay xác nhận gói tin (ACK) mức ứng dụng qua Wearable Data Layer API.
 - Bộ gõ nhịp xúc giác (haptic metronome) điều hòa tốc độ cử động của người tập.
 
-### Ứng dụng Điện thoại (Android Phone)
+### Ứng dụng điện thoại (Android Phone)
 - Viết bằng Kotlin với Jetpack Compose, Material 3 và kiến trúc MVVM.
 - Dịch vụ nền `PhoneMessageService` tiếp nhận các gói envelope nhị phân và phản hồi ACK ngay khi ghi vào cơ sở dữ liệu.
 - Cơ sở dữ liệu Room SQLite lưu trữ các bảng `imu_windows`, `research_sessions`, `research_participants` kèm test di chuyển schema.
 - Giao diện người dùng tối ưu độ tương phản, hỗ trợ người cao tuổi và người suy giảm khả năng vận động.
 - Màn hình Research Mode quản lý thu thập dữ liệu, đánh dấu chu kỳ và xuất tệp ZIP qua Storage Access Framework.
 
-### Máy học và Suy luận Trên Thiết bị
+### Học máy và suy luận Trên Thiết bị
 - Thang mô hình 4 tầng: Lọc theo ngưỡng quy tắc -> Đếm đỉnh chu kỳ -> Mạng tích chập 1D thô -> Kết hợp dựa trên chất lượng tín hiệu.
 - Mô hình TorchScript (`quality_fusion.pt`, 47.5 KB) chạy cục bộ, không cần kết nối internet hay máy chủ ngoài.
 - Xử lý hai kênh cảm biến gia tốc và con quay hồi chuyển độc lập với cơ chế gán trọng số theo chất lượng tín hiệu.
