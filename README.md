@@ -100,6 +100,17 @@ flowchart LR
 
 ---
 
+## Tài liệu Kỹ thuật
+
+- [Hướng dẫn biên dịch từ mã nguồn](docs/BUILD_AND_INSTALL.md): Các bước cài đặt môi trường và biên dịch Android, Python bằng công cụ nguồn mở.
+- [Lịch sử huấn luyện và đánh giá thực nghiệm](docs/TRAINING_AND_EXPERIMENTS.md): Dữ liệu 12 người tham gia, kết quả qua các tầng mô hình và quan sát thực tế trên thiết bị (trường hợp lỏng dây so với lệch vị trí).
+- [Thẻ mô hình máy học (Model Card)](src/phone/src/main/assets/model_card.json): Thông số kỹ thuật của mô hình, chỉ số đo đạc và giới hạn ứng dụng.
+- [Danh mục phụ thuộc và gói đính kèm](DEPENDENCIES.md): Danh sách các thư viện bên thứ ba và giấy phép tương ứng.
+- [Nhật ký thay đổi](CHANGELOG.md): Thông tin các phiên bản phát hành theo chuẩn Semantic Versioning.
+- [Hướng dẫn thu thập dữ liệu](docs/08_RUNBOOK_RESEARCH_MODE.md): Quy trình vận hành Research Mode, danh mục kiểm tra và bước xác thực chất lượng.
+- [Phạm vi kỹ thuật và ranh giới đạo đức](docs/07_G0_KHOA_PHAM_VI_VA_DONG_Y.md): Ranh giới tuyên bố kỹ thuật và quy định bảo mật thông tin người tham gia.
+---
+
 ## Bảo mật và Quyền riêng tư
 
 - Suy luận AI chạy cục bộ trên thiết bị qua PyTorch Mobile Lite, không gửi dữ liệu cảm biến ra máy chủ ngoài hay dịch vụ đám mây.
@@ -116,15 +127,3 @@ Mã nguồn do dự án phát triển được phát hành theo giấy phép [Ap
 
 > [!IMPORTANT]
 > SteadySense AI là dự án nghiên cứu kỹ thuật. Hệ thống không thay thế chỉ định y khoa, chẩn đoán, dịch vụ cấp cứu hoặc sự giám sát của kỹ thuật viên phục hồi chức năng và nhân viên y tế.
-
----
-
-## Tài liệu Kỹ thuật
-
-- [Hướng dẫn biên dịch từ mã nguồn](docs/BUILD_AND_INSTALL.md): Các bước cài đặt môi trường và biên dịch Android, Python bằng công cụ nguồn mở.
-- [Lịch sử huấn luyện và đánh giá thực nghiệm](docs/TRAINING_AND_EXPERIMENTS.md): Dữ liệu 12 người tham gia, kết quả qua các tầng mô hình và quan sát thực tế trên thiết bị (trường hợp lỏng dây so với lệch vị trí).
-- [Thẻ mô hình máy học (Model Card)](src/phone/src/main/assets/model_card.json): Thông số kỹ thuật của mô hình, chỉ số đo đạc và giới hạn ứng dụng.
-- [Danh mục phụ thuộc và gói đính kèm](DEPENDENCIES.md): Danh sách các thư viện bên thứ ba và giấy phép tương ứng.
-- [Nhật ký thay đổi](CHANGELOG.md): Thông tin các phiên bản phát hành theo chuẩn Semantic Versioning.
-- [Hướng dẫn thu thập dữ liệu](docs/08_RUNBOOK_RESEARCH_MODE.md): Quy trình vận hành Research Mode, danh mục kiểm tra và bước xác thực chất lượng.
-- [Phạm vi kỹ thuật và ranh giới đạo đức](docs/07_G0_KHOA_PHAM_VI_VA_DONG_Y.md): Ranh giới tuyên bố kỹ thuật và quy định bảo mật thông tin người tham gia.
