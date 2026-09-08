@@ -28,6 +28,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import kotlinx.coroutines.flow.Flow
 
 @Entity(tableName = "imu_windows", primaryKeys = ["sessionId", "sequenceId"])
 data class ImuWindowEntity(
@@ -135,6 +136,76 @@ interface ResearchDao {
     fun allSessions(): List<ResearchSessionEntity>
 }
 
+@Entity(tableName = "workout_sessions")
+data class WorkoutSessionEntity(
+    @PrimaryKey val id: String,
+    val startedAt: Long,
+    val endedAt: Long,
+    val exerciseName: String,
+    val selectedHand: String,
+    val targetReps: Int,
+    val completedReps: Int,
+    val accuracyPercentage: Int,
+    val steadyScore: Float,
+    val sessionState: String, // "RELIABLE", "PARTIAL", "NEEDS_WORK"
+    val durationSeconds: Int,
+    val repDetailsJson: String,
+    val scheduleId: String? = null,
+)
+
+@Entity(tableName = "workout_schedules")
+data class WorkoutScheduleEntity(
+    @PrimaryKey val id: String,
+    val exerciseName: String,
+    val targetReps: Int,
+    val scheduledTime: String,
+    val dayOfWeek: Int, // 1 = T2, ..., 7 = CN
+    val repeatType: String, // "DAILY", "WEEKLY", "ONCE"
+    val isCompleted: Boolean,
+    val targetSets: Int = 1,
+    val restSeconds: Int = 60,
+    val specificDate: String? = null, // "yyyy-MM-dd" cho lịch ngày cụ thể
+)
+
+@Dao
+interface WorkoutDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertSession(session: WorkoutSessionEntity)
+
+    @Query("SELECT * FROM workout_sessions ORDER BY startedAt DESC")
+    fun allSessions(): List<WorkoutSessionEntity>
+
+    @Query("SELECT * FROM workout_sessions ORDER BY startedAt DESC")
+    fun sessionsFlow(): Flow<List<WorkoutSessionEntity>>
+
+    @Query("SELECT * FROM workout_sessions ORDER BY startedAt DESC LIMIT :limit")
+    fun latestSessions(limit: Int): List<WorkoutSessionEntity>
+
+    @Query("SELECT * FROM workout_sessions WHERE scheduleId = :scheduleId AND startedAt BETWEEN :startMillis AND :endMillis LIMIT 1")
+    fun findSessionByScheduleAndDay(scheduleId: String, startMillis: Long, endMillis: Long): WorkoutSessionEntity?
+
+    @Query("SELECT COUNT(*) FROM workout_sessions")
+    fun countSessions(): Int
+
+    @Query("SELECT SUM(completedReps) FROM workout_sessions")
+    fun totalReps(): Int?
+
+    @Query("DELETE FROM workout_sessions")
+    fun clearAllSessions()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertSchedule(schedule: WorkoutScheduleEntity)
+
+    @Query("SELECT * FROM workout_schedules ORDER BY scheduledTime ASC")
+    fun allSchedules(): List<WorkoutScheduleEntity>
+
+    @Query("SELECT * FROM workout_schedules ORDER BY scheduledTime ASC")
+    fun schedulesFlow(): Flow<List<WorkoutScheduleEntity>>
+
+    @Query("DELETE FROM workout_schedules WHERE id = :id")
+    fun deleteSchedule(id: String)
+}
+
 @Database(
     entities = [
         ImuWindowEntity::class,
@@ -142,13 +213,16 @@ interface ResearchDao {
         ResearchSessionEntity::class,
         ResearchEventEntity::class,
         DeviceSnapshotEntity::class,
+        WorkoutSessionEntity::class,
+        WorkoutScheduleEntity::class,
     ],
-    version = 2,
-    exportSchema = true,
+    version = 7,
+    exportSchema = false,
 )
 abstract class PhoneDatabase : RoomDatabase() {
     abstract fun imuWindowDao(): ImuWindowDao
     abstract fun researchDao(): ResearchDao
+    abstract fun workoutDao(): WorkoutDao
 
     companion object {
         @Volatile private var instance: PhoneDatabase? = null
@@ -182,12 +256,57 @@ abstract class PhoneDatabase : RoomDatabase() {
             }
         }
 
+        val MIGRATION_2_3: Migration = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `workout_sessions` (" +
+                        "`id` TEXT NOT NULL, `startedAt` INTEGER NOT NULL, `endedAt` INTEGER NOT NULL, " +
+                        "`exerciseName` TEXT NOT NULL, `selectedHand` TEXT NOT NULL, " +
+                        "`targetReps` INTEGER NOT NULL, `completedReps` INTEGER NOT NULL, `accuracyPercentage` INTEGER NOT NULL, " +
+                        "`steadyScore` REAL NOT NULL, `sessionState` TEXT NOT NULL, `durationSeconds` INTEGER NOT NULL, " +
+                        "`repDetailsJson` TEXT NOT NULL, PRIMARY KEY(`id`))",
+                )
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS `workout_schedules` (" +
+                        "`id` TEXT NOT NULL, `exerciseName` TEXT NOT NULL, `targetReps` INTEGER NOT NULL, " +
+                        "`scheduledTime` TEXT NOT NULL, `dayOfWeek` INTEGER NOT NULL, `repeatType` TEXT NOT NULL, " +
+                        "`isCompleted` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+                )
+            }
+        }
+
+        val MIGRATION_3_4: Migration = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `workout_schedules` ADD COLUMN `targetSets` INTEGER NOT NULL DEFAULT 1")
+            }
+        }
+
+        val MIGRATION_4_5: Migration = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `workout_schedules` ADD COLUMN `restSeconds` INTEGER NOT NULL DEFAULT 60")
+            }
+        }
+
+        val MIGRATION_5_6: Migration = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `workout_sessions` ADD COLUMN `scheduleId` TEXT DEFAULT NULL")
+            }
+        }
+
+        val MIGRATION_6_7: Migration = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE `workout_schedules` ADD COLUMN `specificDate` TEXT DEFAULT NULL")
+            }
+        }
+
         fun get(context: Context): PhoneDatabase = instance ?: synchronized(this) {
             instance ?: Room.databaseBuilder(
                 context.applicationContext,
                 PhoneDatabase::class.java,
                 "steadysense.db",
-            ).addMigrations(MIGRATION_1_2).build().also { instance = it }
+            ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
+                .fallbackToDestructiveMigrationOnDowngrade()
+                .build().also { instance = it }
         }
     }
 }
