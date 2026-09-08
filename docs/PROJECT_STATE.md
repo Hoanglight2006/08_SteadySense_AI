@@ -341,7 +341,7 @@ thực tiễn và bị chặn phát hành do giấy phép `On_Hand_6` chưa xác
     trực tiếp trên thiết bị biên.
 33. Giữ nguyên mã nguồn trong `source_code/` và `src/`, không sửa đổi snapshot kế thừa. Các thông tin bản quyền và giấy phép được quy định tại `LICENSE`, `DEPENDENCIES.md` và các manifest provenance.
 34. Ghi nhận thử nghiệm thực tế trên ứng dụng: tình huống lỏng dây (`LOOSE_STRAP`) kích hoạt từ chối dự đoán khi tín hiệu suy giảm cơ học; tình huống đeo chặt nhưng lệch trục (`ROTATED`) không gây rung lắc cơ học nên không kích hoạt từ chối, dẫn đến sai lệch góc cử động. Hướng xử lý tiếp theo: bổ sung đặc trưng magnitude invariant hoặc bước hiệu chuẩn tư thế ban đầu.
-35. Chuẩn hóa bộ GitHub Issue Templates tại `.github/ISSUE_TEMPLATE/UI_request/` (1 epic + 4 màn hình). Các mẫu issue được làm sạch triệt để, không chứa sơ đồ ký tự ASCII hay emoji tiêu đề AI, bảo đảm phong cách viết tự nhiên, ngắn gọn và tập trung vào yêu cầu kỹ thuật cùng acceptance criteria.
+35. Chuẩn hóa bộ GitHub Issue Templates tại `.github/ISSUE_TEMPLATE/UI_request/` (1 epic + 4 màn hình).
 
 ## 4. Rủi ro và khoảng trống
 
