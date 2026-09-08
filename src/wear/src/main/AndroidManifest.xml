@@ -10,7 +10,8 @@
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/ic_steadysense"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:theme="@style/Theme.SteadySense.Wear">
         <meta-data
@@ -35,6 +36,14 @@
                     android:host="*"
                     android:pathPrefix="/steadysense/ack"
                     android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/steadysense/exercise-"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/steadysense/ping"
+                    android:scheme="wear" />
             </intent-filter>
         </service>
         <service
@@ -47,6 +56,10 @@
         </service>
         <service
             android:name=".research.ResearchCollectionService"
+            android:exported="false"
+            android:foregroundServiceType="health" />
+        <service
+            android:name=".transport.ExerciseCollectionService"
             android:exported="false"
             android:foregroundServiceType="health" />
     </application>

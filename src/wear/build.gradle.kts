@@ -12,8 +12,8 @@ android {
         applicationId = "vn.edu.ictu.steadysense"
         minSdk = 30
         targetSdk = 35
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "2.0.0"
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -53,6 +53,7 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.foundation:foundation")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material-icons-extended")
     implementation("com.google.android.gms:play-services-wearable:20.0.1")
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
