@@ -1,6 +1,6 @@
 # Trạng thái dự án SteadySense AI
 
-**Cập nhật thủ công gần nhất:** 07/09/2026
+**Cập nhật thủ công gần nhất:** 08/09/2026
 **Giai đoạn:** hoàn thành huấn luyện Model Ladder trên dữ liệu 12 người thật (`P001` - `P012`), tích hợp On-Device PyTorch Mobile Lite trên Android (Cổng G7). Đã hoàn thiện hồ sơ dự thi PMMN: `LICENSE`, `CHANGELOG.md`, `DEPENDENCIES.md`, `docs/BUILD_AND_INSTALL.md`, `docs/TRAINING_AND_EXPERIMENTS.md`, `README.md`, Issue Templates và các quy định đóng góp (Cổng G8).
 - Kết quả Model: `quality_fusion` đạt Test Macro-F1 0.8047; khi lọc tín hiệu kém (Coverage 70%), Macro-F1 đạt 0.8951.
 - Kết quả Đo đạc On-Device (G7): Kích thước model `quality_fusion.pt` là 47.5 KB, độ trễ suy luận dưới 5 ms / cửa sổ 2s, RAM tiêu thụ (Total PSS) 84.8 MB (Native Heap PyTorch 8.1 MB).
@@ -341,6 +341,7 @@ thực tiễn và bị chặn phát hành do giấy phép `On_Hand_6` chưa xác
     trực tiếp trên thiết bị biên.
 33. Giữ nguyên mã nguồn trong `source_code/` và `src/`, không sửa đổi snapshot kế thừa. Các thông tin bản quyền và giấy phép được quy định tại `LICENSE`, `DEPENDENCIES.md` và các manifest provenance.
 34. Ghi nhận thử nghiệm thực tế trên ứng dụng: tình huống lỏng dây (`LOOSE_STRAP`) kích hoạt từ chối dự đoán khi tín hiệu suy giảm cơ học; tình huống đeo chặt nhưng lệch trục (`ROTATED`) không gây rung lắc cơ học nên không kích hoạt từ chối, dẫn đến sai lệch góc cử động. Hướng xử lý tiếp theo: bổ sung đặc trưng magnitude invariant hoặc bước hiệu chuẩn tư thế ban đầu.
+35. Chuẩn hóa bộ GitHub Issue Templates tại `.github/ISSUE_TEMPLATE/UI_request/` (1 epic + 4 màn hình).
 
 ## 4. Rủi ro và khoảng trống
 
