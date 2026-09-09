@@ -4,6 +4,29 @@ Tệp này ghi lại các thay đổi của dự án SteadySense AI theo định
 
 ---
 
+## [2.0.0] - 2026-09-09
+
+### Tái cấu trúc Giao diện Người dùng (WeCare UI v2.0.0)
+
+#### Thêm mới (Added)
+- **Giao diện Trang chủ (`HomeScreen.kt`)**: Tích hợp thẻ tổng quan tiến độ, kiểm tra trạng thái kết nối Wear OS, hiển thị bài tập gợi ý trong ngày và tỷ lệ tuân thủ bài tập.
+- **Luồng bài tập 4 trạng thái (`ActiveExerciseScreen.kt`)**: Điều hướng vòng lặp trạng thái `IDLE` -> `CALIBRATING` -> `EXERCISING` -> `RESTING`, kết hợp kiểm tra độ ổn định tín hiệu cảm biến trước khi tính lần tập hợp lệ.
+- **Động cơ phân tích cử động (`ExerciseRepEngine.kt`)**: Thuật toán nhận diện điểm uốn tín hiệu gia tốc và vận tốc góc để đếm số lần gấp duỗi thời gian thực.
+- **Bài tập phục hồi chức năng và xoa bóp (`MassageExerciseScreen.kt`)**: Bổ sung chế độ hướng dẫn vận động nhẹ nhàng kèm bộ đếm thời gian.
+- **Giao diện Thống kê và Phân tích (`AnalyticsScreen.kt`)**: Biểu đồ phân tích chất lượng tín hiệu cảm biến (Quality Score), tỷ lệ từ chối dữ liệu không đáng tin cậy và lịch sử tập luyện theo tuần.
+- **Lịch tập và Nhắc nhở (`ScheduleScreen.kt`, `WorkoutReminderManager.kt`)**: Hỗ trợ lập lịch trình tập luyện cá nhân hóa, ngăn chặn việc tập bù cho các ngày đã qua trong quá khứ, tích hợp thông báo qua `AlarmManager`.
+- **Cài đặt và Xuất báo cáo (`SettingsScreen.kt`, `RehabReportGenerator.kt`)**: Cho phép quản trị thông tin cá nhân, cấu hình ngưỡng nhạy của cảm biến và xuất báo cáo tiến trình tập luyện dạng tài liệu văn bản để chia sẻ với kỹ thuật viên.
+- **Hướng dẫn âm thanh (`VoiceGuideManager.kt`)**: Tích hợp bộ máy Text-to-Speech (TTS) thông báo chuyển trạng thái bài tập, đếm nhịp và cảnh báo điều chỉnh vị trí vòng đeo khi phát hiện lỏng dây.
+- **Hộp thoại miễn trừ trách nhiệm y tế (`MedicalDisclaimerDialog.kt`)**: Hiển thị khuyến cáo rõ ràng khi người dùng mở ứng dụng, khẳng định hệ thống là công cụ hỗ trợ kỹ thuật và không thay thế chỉ định y khoa.
+- **Đồng bộ thời gian thực Wear OS (`ExerciseCollectionService.kt`, `ExerciseDataBridge.kt`)**: Bổ sung service chạy nền trên thiết bị đeo để duy trì luồng truyền gói tin IMU sang điện thoại trong suốt buổi tập.
+- **Bộ nhận diện ứng dụng**: Cập nhật logo nhận diện vector và toàn bộ bộ icon launcher đa mật độ điểm ảnh cho cả hai module Phone và Wear OS.
+
+#### Thay đổi (Changed)
+- Nâng `versionCode` lên 2 và `versionName` lên "2.0.0" trong cả hai tệp cấu hình `phone/build.gradle.kts` và `wear/build.gradle.kts`.
+- Tái cấu trúc lớp điều hướng tại `MainActivity.kt` của cả Phone và Wear OS để tương thích với kiến trúc màn hình mới.
+
+---
+
 ## [1.0.0] - 2026-08-30
 
 ### Đã hoàn thành (Cổng G7 Đo đạc On-Device và G8 Đóng gói Nghiệm thu)
