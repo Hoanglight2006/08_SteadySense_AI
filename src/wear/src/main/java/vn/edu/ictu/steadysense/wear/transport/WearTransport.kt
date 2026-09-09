@@ -17,10 +17,15 @@
 package vn.edu.ictu.steadysense.wear.transport
 
 import android.content.Context
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.google.android.gms.wearable.MessageEvent
@@ -175,18 +180,270 @@ object WearSender {
     private const val TAG = "SteadySenseWear"
 }
 
+object WearExerciseAlertState {
+    var warningMessage by mutableStateOf<String?>(null)
+        private set
+    var sessionActiveByPhone by mutableStateOf(false)
+        private set
+    /** Chỉ dẫn nhịp tập từ Phone ("GẬP TAY!", "ĐẠT CHUẨN ✓", ...) */
+    var cueMessage by mutableStateOf<String?>(null)
+        private set
+    var isMassageMode by mutableStateOf(false)
+        private set
+    var massageMinutes by mutableStateOf(5)
+        private set
+    var massageSecondsRemaining by mutableIntStateOf(300)
+        private set
+    var isMassagePaused by mutableStateOf(false)
+        private set
+
+    fun setMassageMode(active: Boolean, minutes: Int = 5, secondsRemaining: Int = minutes * 60) {
+        Handler(Looper.getMainLooper()).post {
+            isMassageMode = active
+            massageMinutes = minutes
+            massageSecondsRemaining = if (secondsRemaining > 0) secondsRemaining else minutes * 60
+            isMassagePaused = false
+        }
+    }
+
+    fun pauseMassage(secondsRemaining: Int? = null) {
+        Handler(Looper.getMainLooper()).post {
+            isMassagePaused = true
+            if (secondsRemaining != null && secondsRemaining > 0) {
+                massageSecondsRemaining = secondsRemaining
+            }
+        }
+    }
+
+    fun resumeMassage(secondsRemaining: Int? = null) {
+        Handler(Looper.getMainLooper()).post {
+            isMassagePaused = false
+            if (secondsRemaining != null && secondsRemaining > 0) {
+                massageSecondsRemaining = secondsRemaining
+            }
+        }
+    }
+
+    fun syncMassage(secondsRemaining: Int) {
+        Handler(Looper.getMainLooper()).post {
+            if (secondsRemaining >= 0) {
+                massageSecondsRemaining = secondsRemaining
+            }
+        }
+    }
+
+    fun tickMassageCountdown() {
+        Handler(Looper.getMainLooper()).post {
+            if (isMassageMode && !isMassagePaused && massageSecondsRemaining > 0) {
+                massageSecondsRemaining--
+            }
+        }
+    }
+
+    fun triggerWarning(context: Context, message: String) {
+        Handler(Looper.getMainLooper()).post {
+            warningMessage = message
+        }
+        vibrateStrong(context)
+    }
+
+    fun triggerWarningWithoutVibrate(message: String) {
+        Handler(Looper.getMainLooper()).post {
+            warningMessage = message
+        }
+    }
+
+    fun clearWarning() {
+        Handler(Looper.getMainLooper()).post {
+            warningMessage = null
+        }
+    }
+
+    /** Ra hiệu nhịp tập — rung nhẹ 1 tick + hiện chỉ dẫn trên màn hình đồng hồ. */
+    fun triggerCue(context: Context, message: String) {
+        Handler(Looper.getMainLooper()).post {
+            cueMessage = message
+        }
+        vibrateLight(context)
+    }
+
+    fun triggerCueWithoutVibrate(message: String) {
+        Handler(Looper.getMainLooper()).post {
+            cueMessage = message
+        }
+    }
+
+    fun clearCue() {
+        Handler(Looper.getMainLooper()).post {
+            cueMessage = null
+        }
+    }
+
+    fun setSessionActive(active: Boolean) {
+        Handler(Looper.getMainLooper()).post {
+            sessionActiveByPhone = active
+            if (!active) {
+                cueMessage = null
+                isMassageMode = false
+                isMassagePaused = false
+            }
+        }
+    }
+
+    /** Rung nhẹ 1 nhịp — báo hiệu gập tay. */
+    fun vibrateLight(context: Context) {
+        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager
+            vibratorManager?.defaultVibrator
+        } else {
+            @Suppress("DEPRECATION")
+            context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+        } ?: return
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(80, VibrationEffect.DEFAULT_AMPLITUDE))
+        } else {
+            @Suppress("DEPRECATION")
+            vibrator.vibrate(80)
+        }
+    }
+
+    fun vibrateStrong(context: Context) {
+        val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val vibratorManager = context.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as? VibratorManager
+            vibratorManager?.defaultVibrator
+        } else {
+            @Suppress("DEPRECATION")
+            context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
+        } ?: return
+
+        // 3 nhịp rung dồn dập rất mạnh: 400ms rung, 150ms nghỉ, 400ms rung, 150ms nghỉ, 500ms rung
+        val timings = longArrayOf(0, 400, 150, 400, 150, 500)
+        val amplitudes = intArrayOf(0, 255, 0, 255, 0, 255)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (vibrator.hasAmplitudeControl()) {
+                vibrator.vibrate(VibrationEffect.createWaveform(timings, amplitudes, -1))
+            } else {
+                vibrator.vibrate(VibrationEffect.createWaveform(timings, -1))
+            }
+        } else {
+            @Suppress("DEPRECATION")
+            vibrator.vibrate(timings, -1)
+        }
+    }
+}
+
 class WearAckService : WearableListenerService() {
     override fun onMessageReceived(event: MessageEvent) {
-        if (event.path != TransportPaths.ACK) return
-        val ack = runCatching { TransportAckCodec.decode(event.data) }
-            .getOrElse {
-                Log.e(TAG, "Rejected malformed ACK", it)
-                return
+        when (event.path) {
+            TransportPaths.ACK -> {
+                val ack = runCatching { TransportAckCodec.decode(event.data) }
+                    .getOrElse {
+                        Log.e(TAG, "Rejected malformed ACK", it)
+                        return
+                    }
+                WearSender.acknowledgeAndRetry(this, ack.sessionId, ack.sequenceId)
             }
-        WearSender.acknowledgeAndRetry(this, ack.sessionId, ack.sequenceId)
+            TransportPaths.EXERCISE_WARNING -> {
+                val raw = String(event.data, Charsets.UTF_8).ifBlank { "VUNG QUÁ NHANH!" }
+                Log.w(TAG, "Received EXERCISE_WARNING: $raw")
+                if (raw.startsWith("SILENT:")) {
+                    WearExerciseAlertState.triggerWarningWithoutVibrate(raw.removePrefix("SILENT:"))
+                } else {
+                    WearExerciseAlertState.triggerWarning(this, raw)
+                }
+            }
+            TransportPaths.PING -> {
+                Log.i(TAG, "Received PING, sending watch status")
+                sendWatchStatus(this)
+            }
+            TransportPaths.EXERCISE_SESSION -> {
+                val cmd = String(event.data, Charsets.UTF_8)
+                Log.i(TAG, "Received EXERCISE_SESSION: $cmd")
+                when {
+                    cmd.startsWith("START:MASSAGE") -> {
+                        val mins = cmd.substringAfterLast(":", "5").toIntOrNull() ?: 5
+                        WearExerciseAlertState.setMassageMode(true, mins, mins * 60)
+                        WearExerciseAlertState.setSessionActive(true)
+                        ExerciseCollectionService.stop(this)
+                    }
+                    cmd.startsWith("PAUSE:MASSAGE") -> {
+                        val sec = cmd.substringAfterLast(":", "-1").toIntOrNull()
+                        WearExerciseAlertState.pauseMassage(sec)
+                        WearExerciseAlertState.setSessionActive(true)
+                    }
+                    cmd.startsWith("RESUME:MASSAGE") -> {
+                        val sec = cmd.substringAfterLast(":", "-1").toIntOrNull()
+                        WearExerciseAlertState.resumeMassage(sec)
+                        WearExerciseAlertState.setSessionActive(true)
+                    }
+                    cmd.startsWith("SYNC:MASSAGE") -> {
+                        val sec = cmd.substringAfterLast(":", "-1").toIntOrNull()
+                        if (sec != null && sec >= 0) {
+                            WearExerciseAlertState.syncMassage(sec)
+                        }
+                    }
+                    cmd.startsWith("START") -> {
+                        WearExerciseAlertState.setMassageMode(false)
+                        WearExerciseAlertState.setSessionActive(true)
+                        ExerciseCollectionService.start(this)
+                    }
+                    else -> {
+                        WearExerciseAlertState.setMassageMode(false)
+                        WearExerciseAlertState.setSessionActive(false)
+                        ExerciseCollectionService.stop(this)
+                    }
+                }
+                sendWatchStatus(this)
+            }
+            TransportPaths.EXERCISE_CUE -> {
+                val raw = String(event.data, Charsets.UTF_8)
+                Log.i(TAG, "Received EXERCISE_CUE: $raw")
+                if (raw == "TEST_VIBRATE") {
+                    WearExerciseAlertState.vibrateLight(this)
+                } else if (raw.startsWith("SILENT:")) {
+                    WearExerciseAlertState.triggerCueWithoutVibrate(raw.removePrefix("SILENT:"))
+                } else {
+                    WearExerciseAlertState.triggerCue(this, raw)
+                }
+            }
+        }
     }
 
     companion object {
         private const val TAG = "SteadySenseWear"
+
+        fun getBatteryPercentage(context: Context): Int {
+            return try {
+                val bm = context.getSystemService(Context.BATTERY_SERVICE) as? android.os.BatteryManager
+                val capacity = bm?.getIntProperty(android.os.BatteryManager.BATTERY_PROPERTY_CAPACITY) ?: -1
+                if (capacity in 0..100) {
+                    capacity
+                } else {
+                    val ifilter = android.content.IntentFilter(android.content.Intent.ACTION_BATTERY_CHANGED)
+                    val batteryStatus = context.registerReceiver(null, ifilter)
+                    val level = batteryStatus?.getIntExtra(android.os.BatteryManager.EXTRA_LEVEL, -1) ?: -1
+                    val scale = batteryStatus?.getIntExtra(android.os.BatteryManager.EXTRA_SCALE, -1) ?: -1
+                    if (level >= 0 && scale > 0) {
+                        (level * 100 / scale.toFloat()).toInt()
+                    } else -1
+                }
+            } catch (e: Exception) {
+                -1
+            }
+        }
+
+        fun sendWatchStatus(context: Context) {
+            val batLevel = getBatteryPercentage(context)
+            val payload = "$batLevel".toByteArray(Charsets.UTF_8)
+            runCatching {
+                Wearable.getNodeClient(context).connectedNodes.addOnSuccessListener { nodes ->
+                    nodes.forEach { node ->
+                        Wearable.getMessageClient(context).sendMessage(node.id, TransportPaths.WATCH_STATUS, payload)
+                    }
+                }
+            }
+        }
     }
 }
+

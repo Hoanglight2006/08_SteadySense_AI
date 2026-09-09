@@ -27,6 +27,11 @@ object TransportPaths {
     const val RESEARCH_CONFIG = "/steadysense/research-config/v1"
     const val RESEARCH_CONTROL = "/steadysense/research-control/v1"
     const val RESEARCH_EVENT = "/steadysense/research-event/v1"
+    const val EXERCISE_WARNING = "/steadysense/exercise-warning/v1"
+    const val EXERCISE_SESSION = "/steadysense/exercise-session/v1"
+    const val EXERCISE_CUE = "/steadysense/exercise-cue/v1"
+    const val WATCH_STATUS = "/steadysense/watch-status/v1"
+    const val PING = "/steadysense/ping/v1"
 }
 
 data class SensorVector(

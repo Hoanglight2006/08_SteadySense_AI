@@ -101,6 +101,8 @@ class QualityFusionInference(context: Context) {
         val predicted = probs.indices.maxByOrNull { probs[it] } ?: 0
         val gatePass = quality.all { it >= qualityThreshold }
 
+        Log.i(TAG, "Inference result: label=${CLASS_NAMES.getOrNull(predicted)} probs=[${probs.map { "%.2f".format(it) }.joinToString()}] quality=[${quality.map { "%.2f".format(it) }.joinToString()}] gatePass=$gatePass")
+
         return Result(
             predictedClass      = predicted,
             classProbabilities  = probs,

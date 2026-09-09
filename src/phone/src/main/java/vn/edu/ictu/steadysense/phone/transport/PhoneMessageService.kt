@@ -41,9 +41,15 @@ import vn.edu.ictu.steadysense.phone.data.PhoneDatabase
 object PhoneTransferState {
     var storedWindows by mutableIntStateOf(0)
         private set
+    var watchBatteryPercent by mutableIntStateOf(-1)
+        private set
 
     fun publishStoredCount(value: Int) {
         Handler(Looper.getMainLooper()).post { storedWindows = value }
+    }
+
+    fun publishWatchBattery(value: Int) {
+        Handler(Looper.getMainLooper()).post { watchBatteryPercent = value }
     }
 }
 
@@ -52,6 +58,20 @@ class PhoneMessageService : WearableListenerService() {
     private val io = Executors.newSingleThreadExecutor()
 
     override fun onMessageReceived(event: MessageEvent) {
+        if (event.path == TransportPaths.WATCH_STATUS) {
+            val bat = String(event.data, Charsets.UTF_8).toIntOrNull() ?: -1
+            PhoneTransferState.publishWatchBattery(bat)
+            Log.i(TAG, "Received watch status battery=$bat%")
+            return
+        }
+        if (event.path == TransportPaths.EXERCISE_SESSION) {
+            val cmd = String(event.data, Charsets.UTF_8)
+            Log.i(TAG, "Received EXERCISE_SESSION from watch: $cmd")
+            if (cmd.startsWith("TOGGLE_PAUSE")) {
+                ExerciseDataBridge.emitMassageControl("TOGGLE_PAUSE")
+            }
+            return
+        }
         if (event.path == TransportPaths.RESEARCH_EVENT) {
             val marker = runCatching { ResearchControlCodec.decode(event.data) }.getOrNull() ?: return
             io.execute {
@@ -84,6 +104,9 @@ class PhoneMessageService : WearableListenerService() {
                 Log.e(TAG, "Rejected malformed IMU payload", it)
                 return
             }
+
+        // Forward IMU window real-time cho màn hình tập luyện (nếu đang mở)
+        ExerciseDataBridge.emit(window)
 
         io.execute {
             val dao = database.imuWindowDao()

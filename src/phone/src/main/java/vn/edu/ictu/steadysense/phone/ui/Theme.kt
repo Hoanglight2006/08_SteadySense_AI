@@ -21,34 +21,48 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-val Coral = Color(0xFFFF6B6B)
-val CoralSoft = Color(0xFFFFE7E5)
-val Sky = Color(0xFF3C8DFF)
-val SkySoft = Color(0xFFE6F0FF)
-val Mint = Color(0xFF31C7A3)
-val MintSoft = Color(0xFFDDF8EF)
-val Sun = Color(0xFFFFC857)
-val Ink = Color(0xFF20263A)
-val Muted = Color(0xFF697089)
-val Canvas = Color(0xFFF7F9FF)
+// Wecare Medical Dashboard Inspired Palette
+val Teal = Color(0xFF0FB7A4)
+val TealDark = Color(0xFF0A8A7C)
+val TealSoft = Color(0xFFE8F8F5)
+val TealContainer = Color(0xFFD0F2EB)
+
+val Coral = Color(0xFFEF4444)
+val CoralSoft = Color(0xFFFEE2E2)
+
+val Amber = Color(0xFFF59E0B)
+val AmberSoft = Color(0xFFFEF3C7)
+
+val Sky = Color(0xFF0EA5E9)
+val SkySoft = Color(0xFFE0F2FE)
+
+val Mint = Teal
+val MintSoft = TealSoft
+val Sun = Amber
+
+val Ink = Color(0xFF0F172A)
+val InkSecondary = Color(0xFF334155)
+val Muted = Color(0xFF64748B)
+val Canvas = Color(0xFFF8FAFC)
+val SurfaceBorder = Color(0xFFE2E8F0)
 val White = Color(0xFFFFFFFF)
 
 private val SteadyColors = lightColorScheme(
-    primary = Sky,
+    primary = Teal,
     onPrimary = White,
-    primaryContainer = SkySoft,
+    primaryContainer = TealSoft,
     onPrimaryContainer = Ink,
-    secondary = Mint,
+    secondary = Sky,
     onSecondary = White,
-    secondaryContainer = MintSoft,
-    tertiary = Coral,
-    tertiaryContainer = CoralSoft,
+    secondaryContainer = SkySoft,
+    tertiary = Amber,
+    tertiaryContainer = AmberSoft,
     background = Canvas,
     onBackground = Ink,
     surface = White,
     onSurface = Ink,
     onSurfaceVariant = Muted,
-    outline = Color(0xFFDCE2F0),
+    outline = SurfaceBorder,
 )
 
 @Composable
