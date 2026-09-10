@@ -21,6 +21,7 @@ import android.content.Intent
 import vn.edu.ictu.steadysense.phone.util.RehabReportGenerator
 import vn.edu.ictu.steadysense.phone.util.VoiceGuideManager
 import vn.edu.ictu.steadysense.phone.util.WorkoutReminderManager
+import vn.edu.ictu.steadysense.phone.transport.PhoneTransferState
 import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -140,9 +141,9 @@ fun SettingsScreen(
     var voiceGuide by remember { mutableStateOf(UserPreferences.isVoiceGuideEnabled(context)) }
     var watchVibration by remember { mutableStateOf(UserPreferences.isWatchVibrationEnabled(context)) }
 
-    var watchName by remember { mutableStateOf("Đang tìm đồng hồ...") }
-    var watchConnected by remember { mutableStateOf(false) }
-    var isCheckingWatch by remember { mutableStateOf(false) }
+    val watchName = PhoneTransferState.watchDeviceName
+    val watchConnected = PhoneTransferState.isWatchConnected
+    val isCheckingWatch = PhoneTransferState.isCheckingConnection
     var showDisclaimerDialog by remember { mutableStateOf(false) }
     var showClearConfirmDialog by remember { mutableStateOf(false) }
 
@@ -273,24 +274,13 @@ fun SettingsScreen(
     }
 
     fun refreshWatchInfo() {
-        Wearable.getNodeClient(context).connectedNodes
-            .addOnSuccessListener { nodes ->
-                if (nodes.isNotEmpty()) {
-                    watchName = nodes.first().displayName
-                    watchConnected = true
-                } else {
-                    watchName = "Chưa kết nối đồng hồ"
-                    watchConnected = false
-                }
-            }
-            .addOnFailureListener {
-                watchName = "Lỗi kết nối Wear OS"
-                watchConnected = false
-            }
+        scope.launch {
+            PhoneTransferState.performPingPongCheck(context)
+        }
     }
 
     LaunchedEffect(Unit) {
-        refreshWatchInfo()
+        PhoneTransferState.performPingPongCheck(context)
     }
 
     LazyColumn(
@@ -312,25 +302,26 @@ fun SettingsScreen(
                 SettingsGroupTitle("THIẾT BỊ & KẾT NỐI")
 
                 // Card đồng hồ
+                val watchSubtitle = when {
+                    isCheckingWatch -> "Đang kiểm tra kết nối qua Bluetooth..."
+                    watchConnected -> {
+                        val bat = PhoneTransferState.watchBatteryPercent
+                        if (bat in 0..100) "Đã kết nối Bluetooth ● Pin $bat% ● Sẵn sàng"
+                        else "Đã kết nối Bluetooth ● Sẵn sàng thu nhận IMU"
+                    }
+                    watchName.contains("Wi-Fi", ignoreCase = true) -> "Đang tắt Bluetooth (Chỉ có Wi-Fi, không đủ độ trễ thấp)"
+                    else -> "Chưa tìm thấy thiết bị qua Bluetooth"
+                }
+
                 DeviceStatusCard(
                     icon = Icons.Rounded.Watch,
                     title = "Đồng hồ: $watchName",
-                    subtitle = if (watchConnected) "Đã kết nối ● Sẵn sàng thu nhận IMU" else "Chưa tìm thấy thiết bị",
+                    subtitle = watchSubtitle,
                     isConnected = watchConnected,
                     isLoading = isCheckingWatch,
                     onActionClick = {
                         if (!isCheckingWatch) {
-                            scope.launch {
-                                isCheckingWatch = true
-                                refreshWatchInfo()
-                                Wearable.getNodeClient(context).connectedNodes.addOnSuccessListener { nodes ->
-                                    nodes.forEach { node ->
-                                        Wearable.getMessageClient(context).sendMessage(node.id, TransportPaths.PING, ByteArray(0))
-                                    }
-                                }
-                                delay(2500L)
-                                isCheckingWatch = false
-                            }
+                            refreshWatchInfo()
                         }
                     },
                     actionText = if (isCheckingWatch) "Kiểm tra..." else "Kiểm tra",

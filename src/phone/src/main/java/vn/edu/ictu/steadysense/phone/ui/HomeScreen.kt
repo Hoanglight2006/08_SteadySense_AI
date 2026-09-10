@@ -496,10 +496,14 @@ private fun WatchStatusCard(
                 )
                 Spacer(Modifier.height(2.dp))
                 val batteryVal = PhoneTransferState.watchBatteryPercent
-                val statusText = if (watchConnected) {
-                    if (batteryVal in 0..100) "Pin: $batteryVal% · Sẵn sàng" else "Đang kết nối đồng hồ..."
-                } else {
-                    "Chạm để kết nối lại"
+                val isChecking = PhoneTransferState.isCheckingConnection
+                val statusText = when {
+                    isChecking -> "Đang kiểm tra kết nối..."
+                    watchConnected -> {
+                        if (batteryVal in 0..100) "Pin: $batteryVal% · Sẵn sàng" else "Đang kết nối đồng hồ..."
+                    }
+                    PhoneTransferState.watchDeviceName.contains("Wi-Fi", ignoreCase = true) -> "Chỉ có Wi-Fi (Cần bật Bluetooth)"
+                    else -> "Chạm để kết nối lại"
                 }
                 Text(
                     text = statusText,
@@ -542,8 +546,13 @@ private fun WatchStatusCard(
                     colors = ButtonDefaults.buttonColors(containerColor = Amber),
                     shape = RoundedCornerShape(14.dp),
                     contentPadding = ButtonDefaults.ContentPadding,
+                    enabled = !PhoneTransferState.isCheckingConnection,
                 ) {
-                    Text("Nối lại", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                    Text(
+                        if (PhoneTransferState.isCheckingConnection) "Đang tìm..." else "Nối lại",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
                 }
             }
         }

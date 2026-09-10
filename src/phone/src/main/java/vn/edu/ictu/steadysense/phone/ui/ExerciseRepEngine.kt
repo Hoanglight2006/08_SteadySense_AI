@@ -41,6 +41,7 @@ import vn.edu.ictu.steadysense.core.TransportPaths
 import vn.edu.ictu.steadysense.phone.data.UserPreferences
 import vn.edu.ictu.steadysense.phone.ml.QualityFusionInference
 import vn.edu.ictu.steadysense.phone.transport.ExerciseDataBridge
+import vn.edu.ictu.steadysense.phone.transport.PhoneTransferState
 import vn.edu.ictu.steadysense.phone.util.VoiceGuideManager
 
 /**
@@ -231,6 +232,15 @@ class ExerciseRepEngine(
 
             var repIndex = 0
             while (repIndex < targetRepsPerSet) {
+                while (!PhoneTransferState.isWatchConnected) {
+                    _state.value = _state.value.copy(
+                        phase = RepPhase.IDLE,
+                        cueText = "Mất kết nối với đồng hồ",
+                        feedbackText = "Đang chờ kết nối lại để tiếp tục...",
+                    )
+                    delay(500L)
+                }
+
                 repIndex++
                 val cueTime = System.currentTimeMillis()
                 val totalRepNumber = (setIndex - 1) * targetRepsPerSet + repIndex
@@ -261,7 +271,10 @@ class ExerciseRepEngine(
                 try {
                     withTimeout(IMU_TIMEOUT_MS) {
                         ExerciseDataBridge.windows
-                            .filter { it.receivedAtMillis >= repStartTime }
+                            .filter { timestamped ->
+                                val now = System.currentTimeMillis()
+                                timestamped.receivedAtMillis >= repStartTime && (now - timestamped.receivedAtMillis < 4_000L)
+                            }
                             .collect { timestamped ->
                                 val window = timestamped.window
                                 if (window.frames.isEmpty()) return@collect
@@ -475,6 +488,22 @@ class ExerciseRepEngine(
                 } catch (_: RepCompletedException) {
                     // Hoàn thành đánh giá 1 rep
                 } catch (e: TimeoutCancellationException) {
+                    if (!PhoneTransferState.isWatchConnected) {
+                        Log.w(TAG, "Timeout due to watch disconnect. Waiting for reconnection...")
+                        _state.value = _state.value.copy(
+                            phase = RepPhase.IDLE,
+                            cueText = "Mất kết nối với đồng hồ",
+                            feedbackText = "Đang chờ kết nối lại với đồng hồ để tiếp tục...",
+                            errorMessage = null,
+                        )
+                        while (!PhoneTransferState.isWatchConnected) {
+                            delay(500L)
+                        }
+                        delay(1000L)
+                        repIndex--
+                        continue
+                    }
+
                     if (!motionStarted) {
                         _state.value = _state.value.copy(
                             phase = RepPhase.FEEDBACK_BAD,
@@ -485,11 +514,10 @@ class ExerciseRepEngine(
                     } else {
                         _state.value = _state.value.copy(
                             phase = RepPhase.FEEDBACK_BAD,
-                            cueText = "Mất kết nối",
-                            feedbackText = "Kiểm tra kết nối đồng hồ rồi bấm tiếp tục",
-                            errorMessage = "Timeout: Không nhận được dữ liệu IMU trong ${IMU_TIMEOUT_MS / 1000}s",
+                            cueText = "Chưa hoàn thành động tác",
+                            feedbackText = "Động tác bị gián đoạn hoặc chưa hoàn thành. Hãy bấm tiếp tục khi sẵn sàng.",
+                            errorMessage = null,
                         )
-                        sendWarningToWatch(context, "MẤT KẾT NỐI\nKiểm tra đồng hồ")
                     }
                     repIndex--
                 } catch (e: CancellationException) {
