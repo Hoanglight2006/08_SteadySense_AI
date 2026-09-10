@@ -49,6 +49,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -65,6 +66,7 @@ import com.google.android.gms.wearable.Wearable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import vn.edu.ictu.steadysense.phone.data.PhoneDatabase
 import vn.edu.ictu.steadysense.phone.data.UserPreferences
@@ -84,14 +86,39 @@ import vn.edu.ictu.steadysense.phone.ui.Teal
 import vn.edu.ictu.steadysense.phone.ui.TealSoft
 import vn.edu.ictu.steadysense.phone.ui.White
 
+import android.bluetooth.BluetoothAdapter
+import android.content.BroadcastReceiver
+import android.content.Intent
+import android.content.IntentFilter
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import vn.edu.ictu.steadysense.phone.util.VoiceGuideManager
 import vn.edu.ictu.steadysense.phone.util.WorkoutReminderManager
 
 class MainActivity : ComponentActivity() {
+    private val bluetoothReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == BluetoothAdapter.ACTION_STATE_CHANGED) {
+                val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
+                if (state == BluetoothAdapter.STATE_OFF || state == BluetoothAdapter.STATE_TURNING_OFF) {
+                    PhoneTransferState.setConnected(false)
+                } else if (state == BluetoothAdapter.STATE_ON && context != null) {
+                    lifecycleScope.launch {
+                        PhoneTransferState.performPingPongCheck(this@MainActivity, timeoutMs = 1500L)
+                    }
+                }
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         VoiceGuideManager.init(this)
         WorkoutReminderManager.createNotificationChannel(this)
+
+        runCatching {
+            registerReceiver(bluetoothReceiver, IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED))
+        }
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             if (checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
@@ -111,6 +138,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        runCatching {
+            unregisterReceiver(bluetoothReceiver)
+        }
         VoiceGuideManager.shutdown()
     }
 }
@@ -126,32 +156,13 @@ private enum class Screen(val label: String, val icon: ImageVector) {
 @Composable
 private fun SteadySenseApp() {
     val context = LocalContext.current
-    var watchConnected by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
+    val watchConnected = PhoneTransferState.isWatchConnected
 
-    // Kiểm tra kết nối đồng hồ WearOS và yêu cầu gửi pin
+    // Kiểm tra kết nối đồng hồ WearOS qua cơ chế Ping-Pong 2 chiều
     fun refreshWatchConnection() {
-        Wearable.getNodeClient(context).connectedNodes
-            .addOnSuccessListener { nodes ->
-                watchConnected = nodes.isNotEmpty()
-                if (nodes.isEmpty()) {
-                    PhoneTransferState.publishWatchBattery(-1)
-                } else {
-                    nodes.forEach { node ->
-                        Wearable.getMessageClient(context).sendMessage(node.id, TransportPaths.PING, ByteArray(0))
-                    }
-                }
-            }
-            .addOnFailureListener {
-                watchConnected = false
-                PhoneTransferState.publishWatchBattery(-1)
-            }
-    }
-
-    // Polling tự động liên tục mỗi 15 giây để cập nhật pin thực tế theo thời gian thực
-    LaunchedEffect(Unit) {
-        while (isActive) {
-            refreshWatchConnection()
-            delay(15_000L)
+        scope.launch {
+            PhoneTransferState.performPingPongCheck(context)
         }
     }
 
@@ -178,6 +189,15 @@ private fun SteadySenseApp() {
     var activeExerciseReps by rememberSaveable { mutableStateOf(10) }
     var activeExerciseRestSeconds by rememberSaveable { mutableStateOf(60) }
     var activeScheduleId by rememberSaveable { mutableStateOf<String?>(null) }
+
+    // Polling tự động thích ứng: 2.5s khi đang tập, 4s khi đang mất kết nối, 12s khi bình thường
+    LaunchedEffect(sessionActive, watchConnected) {
+        while (isActive) {
+            PhoneTransferState.performPingPongCheck(context, timeoutMs = 1500L)
+            val pollDelay = if (sessionActive) 2_500L else if (!watchConnected) 4_000L else 12_000L
+            delay(pollDelay)
+        }
+    }
     var inResearchMode by rememberSaveable { mutableStateOf(false) }
     var showDisclaimer by rememberSaveable {
         mutableStateOf(!UserPreferences.isDisclaimerAccepted(context))

@@ -16,16 +16,25 @@
 
 package vn.edu.ictu.steadysense.phone.transport
 
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.google.android.gms.wearable.MessageEvent
+import com.google.android.gms.wearable.Node
 import com.google.android.gms.wearable.Wearable
 import com.google.android.gms.wearable.WearableListenerService
 import java.util.concurrent.Executors
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withTimeoutOrNull
 import vn.edu.ictu.steadysense.core.ImuPayloadCodec
 import vn.edu.ictu.steadysense.core.TransportAck
 import vn.edu.ictu.steadysense.core.TransportAckCodec
@@ -43,13 +52,129 @@ object PhoneTransferState {
         private set
     var watchBatteryPercent by mutableIntStateOf(-1)
         private set
+    var isWatchConnected by mutableStateOf(false)
+        private set
+    var watchDeviceName by mutableStateOf("Chưa tìm thấy thiết bị")
+        private set
+    var isCheckingConnection by mutableStateOf(false)
+        private set
+    var lastSeenEpochMillis by mutableLongStateOf(0L)
+        private set
+
+    @Volatile
+    private var pingAckCompleter: CompletableDeferred<Int>? = null
 
     fun publishStoredCount(value: Int) {
         Handler(Looper.getMainLooper()).post { storedWindows = value }
     }
 
     fun publishWatchBattery(value: Int) {
-        Handler(Looper.getMainLooper()).post { watchBatteryPercent = value }
+        Handler(Looper.getMainLooper()).post {
+            watchBatteryPercent = value
+            if (value >= 0) {
+                isWatchConnected = true
+                lastSeenEpochMillis = System.currentTimeMillis()
+            }
+        }
+        pingAckCompleter?.complete(value)
+    }
+
+    fun setConnected(connected: Boolean) {
+        Handler(Looper.getMainLooper()).post {
+            isWatchConnected = connected
+            if (connected) {
+                lastSeenEpochMillis = System.currentTimeMillis()
+            } else {
+                watchBatteryPercent = -1
+                watchDeviceName = "Chưa tìm thấy thiết bị"
+            }
+        }
+    }
+
+    fun onPeerConnected(node: Node) {
+        Handler(Looper.getMainLooper()).post {
+            if (node.isNearby) {
+                watchDeviceName = node.displayName
+            }
+        }
+    }
+
+    fun onPeerDisconnected(node: Node) {
+        Handler(Looper.getMainLooper()).post {
+            isWatchConnected = false
+            watchBatteryPercent = -1
+            watchDeviceName = "Chưa tìm thấy thiết bị"
+        }
+        pingAckCompleter?.complete(-1)
+    }
+
+    suspend fun performPingPongCheck(context: Context, timeoutMs: Long = 1800L): Boolean {
+        Handler(Looper.getMainLooper()).post { isCheckingConnection = true }
+        val deferred = CompletableDeferred<Int>()
+        pingAckCompleter = deferred
+
+        return try {
+            val nodesTask = Wearable.getNodeClient(context).connectedNodes
+            val nodes = suspendCancellableCoroutine<List<Node>> { cont ->
+                nodesTask.addOnSuccessListener { cont.resume(it) }
+                nodesTask.addOnFailureListener { cont.resumeWithException(it) }
+                nodesTask.addOnCanceledListener { cont.cancel() }
+            }
+
+            // Chỉ chấp nhận node kết nối trực tiếp tầm gần (Bluetooth)
+            val nearbyNodes = nodes.filter { it.isNearby }
+            if (nearbyNodes.isEmpty()) {
+                Handler(Looper.getMainLooper()).post {
+                    isWatchConnected = false
+                    watchBatteryPercent = -1
+                    watchDeviceName = if (nodes.isEmpty()) {
+                        "Chưa tìm thấy thiết bị"
+                    } else {
+                        "Chỉ có Wi-Fi (Cần Bluetooth)"
+                    }
+                    isCheckingConnection = false
+                }
+                return false
+            }
+
+            val targetNode = nearbyNodes.first()
+            Handler(Looper.getMainLooper()).post {
+                watchDeviceName = targetNode.displayName
+            }
+
+            // Gửi PING tới đồng hồ
+            Wearable.getMessageClient(context)
+                .sendMessage(targetNode.id, TransportPaths.PING, ByteArray(0))
+
+            // Đợi đồng hồ thực sự phản hồi WATCH_STATUS trong timeoutMs (Bắt tay 2 chiều)
+            val batteryResult = withTimeoutOrNull(timeoutMs) {
+                deferred.await()
+            }
+
+            val success = batteryResult != null && batteryResult >= 0
+            Handler(Looper.getMainLooper()).post {
+                isWatchConnected = success
+                if (success) {
+                    watchBatteryPercent = batteryResult
+                    lastSeenEpochMillis = System.currentTimeMillis()
+                } else {
+                    watchBatteryPercent = -1
+                }
+                isCheckingConnection = false
+            }
+            success
+        } catch (e: Exception) {
+            Handler(Looper.getMainLooper()).post {
+                isWatchConnected = false
+                watchBatteryPercent = -1
+                isCheckingConnection = false
+            }
+            false
+        } finally {
+            if (pingAckCompleter === deferred) {
+                pingAckCompleter = null
+            }
+        }
     }
 }
 
@@ -57,7 +182,21 @@ class PhoneMessageService : WearableListenerService() {
     private val database by lazy { PhoneDatabase.get(this) }
     private val io = Executors.newSingleThreadExecutor()
 
+    override fun onPeerConnected(peer: Node) {
+        Log.i(TAG, "Peer connected: ${peer.displayName} (isNearby=${peer.isNearby})")
+        PhoneTransferState.onPeerConnected(peer)
+        if (peer.isNearby) {
+            Wearable.getMessageClient(this).sendMessage(peer.id, TransportPaths.PING, ByteArray(0))
+        }
+    }
+
+    override fun onPeerDisconnected(peer: Node) {
+        Log.w(TAG, "Peer disconnected: ${peer.displayName}")
+        PhoneTransferState.onPeerDisconnected(peer)
+    }
+
     override fun onMessageReceived(event: MessageEvent) {
+        PhoneTransferState.setConnected(true)
         if (event.path == TransportPaths.WATCH_STATUS) {
             val bat = String(event.data, Charsets.UTF_8).toIntOrNull() ?: -1
             PhoneTransferState.publishWatchBattery(bat)

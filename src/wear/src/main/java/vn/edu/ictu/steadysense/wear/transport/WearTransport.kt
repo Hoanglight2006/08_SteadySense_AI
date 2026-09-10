@@ -29,6 +29,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.google.android.gms.wearable.MessageEvent
+import com.google.android.gms.wearable.Node
 import com.google.android.gms.wearable.Wearable
 import com.google.android.gms.wearable.WearableListenerService
 import java.util.concurrent.Executors
@@ -42,6 +43,22 @@ import vn.edu.ictu.steadysense.wear.data.OutboxEntity
 import vn.edu.ictu.steadysense.wear.data.WearDatabase
 
 data class TransferSnapshot(val pending: Int = 0, val acknowledged: Int = 0)
+
+object WearConnectionState {
+    var isPhoneConnected by mutableStateOf(false)
+        private set
+
+    fun setConnected(connected: Boolean) {
+        Handler(Looper.getMainLooper()).post {
+            isPhoneConnected = connected
+        }
+    }
+
+    fun updateFromNodes(nodes: List<Node>) {
+        val hasNearby = nodes.any { it.isNearby }
+        setConnected(hasNearby)
+    }
+}
 
 object WearTransferState {
     var snapshot by mutableStateOf(TransferSnapshot())
@@ -78,6 +95,8 @@ class WearOutboxStore(context: Context) {
         }
 
     fun count(): Int = dao.count()
+
+    fun purgeStale(cutoffEpochMillis: Long): Int = dao.deleteOlderThan(cutoffEpochMillis)
 }
 
 object WearSender {
@@ -103,8 +122,9 @@ object WearSender {
 
     fun retryPending(context: Context) {
         val appContext = context.applicationContext
+        retryScheduled.set(false)
+        retryDelaySeconds = 1L
         io.execute {
-            retryDelaySeconds = 2L
             inFlight.clear()
             val store = WearOutboxStore(appContext)
             WearTransferState.update(store.count())
@@ -118,7 +138,7 @@ object WearSender {
             inFlight.remove(key(sessionId, sequenceId))
             val store = WearOutboxStore(appContext)
             val removed = store.acknowledge(sessionId, sequenceId)
-            if (removed) retryDelaySeconds = 2L
+            if (removed) retryDelaySeconds = 1L
             WearTransferState.update(store.count(), if (removed) 1 else 0)
             Log.i(TAG, "ACK received session=$sessionId sequence=$sequenceId removed=$removed")
             sendPending(appContext, store)
@@ -127,6 +147,9 @@ object WearSender {
 
     private fun sendPending(appContext: Context, store: WearOutboxStore) {
         val now = System.currentTimeMillis()
+        // Dọn dẹp các gói IMU cũ tồn đọng > 4 giây khi bị gián đoạn mạng
+        store.purgeStale(now - 4_000L)
+
         // Giải phóng các gói đã timeout (ACK bị rớt, không thể về đồng hồ)
         inFlight.entries.removeIf { (_, sentAt) -> now - sentAt > IN_FLIGHT_TIMEOUT_MS }
 
@@ -135,7 +158,7 @@ object WearSender {
         if (toSend.isEmpty()) return
         Wearable.getNodeClient(appContext).connectedNodes
             .addOnSuccessListener { nodes ->
-                val node = nodes.firstOrNull() ?: run {
+                val node = nodes.firstOrNull { it.isNearby } ?: run {
                     inFlight.clear()
                     return@addOnSuccessListener scheduleRetry(appContext)
                 }
@@ -166,7 +189,7 @@ object WearSender {
     private fun scheduleRetry(appContext: Context) {
         if (!retryScheduled.compareAndSet(false, true)) return
         val delay = retryDelaySeconds
-        retryDelaySeconds = (retryDelaySeconds * 2).coerceAtMost(60)
+        retryDelaySeconds = (retryDelaySeconds * 2).coerceAtMost(3L)
         scheduler.schedule({
             retryScheduled.set(false)
             retryPending(appContext)
@@ -334,7 +357,24 @@ object WearExerciseAlertState {
 }
 
 class WearAckService : WearableListenerService() {
+    override fun onPeerConnected(peer: Node) {
+        Log.i(TAG, "Phone peer connected: ${peer.displayName} isNearby=${peer.isNearby}")
+        if (peer.isNearby) {
+            WearConnectionState.setConnected(true)
+            WearSender.retryPending(this)
+        }
+    }
+
+    override fun onPeerDisconnected(peer: Node) {
+        Log.w(TAG, "Phone peer disconnected: ${peer.displayName}")
+        WearConnectionState.setConnected(false)
+    }
+
     override fun onMessageReceived(event: MessageEvent) {
+        WearConnectionState.setConnected(true)
+        if (event.path == TransportPaths.PING || event.path == TransportPaths.EXERCISE_SESSION) {
+            WearSender.retryPending(this)
+        }
         when (event.path) {
             TransportPaths.ACK -> {
                 val ack = runCatching { TransportAckCodec.decode(event.data) }

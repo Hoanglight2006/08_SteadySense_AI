@@ -103,6 +103,7 @@ import vn.edu.ictu.steadysense.core.TransportPaths
 import vn.edu.ictu.steadysense.phone.data.PhoneDatabase
 import vn.edu.ictu.steadysense.phone.data.UserPreferences
 import vn.edu.ictu.steadysense.phone.data.WorkoutSessionEntity
+import vn.edu.ictu.steadysense.phone.transport.PhoneTransferState
 import java.util.UUID
 private enum class ResultTier {
     EXCELLENT,
@@ -134,17 +135,49 @@ fun ActiveExerciseScreen(
         )
     }
     val repState by engine.state.collectAsState()
+    val isWatchConnected = PhoneTransferState.isWatchConnected
 
     // Đã bắt đầu tập chưa (bấm "Sẵn sàng")
     var hasStarted by remember { mutableStateOf(false) }
     var elapsedSeconds by remember { mutableIntStateOf(0) }
     var showDetailSheet by remember { mutableStateOf(false) }
 
-    LaunchedEffect(hasStarted, repState.isFinished) {
-        if (hasStarted && !repState.isFinished) {
+    LaunchedEffect(hasStarted, repState.isFinished, isWatchConnected) {
+        if (hasStarted && !repState.isFinished && isWatchConnected) {
             while (isActive) {
                 delay(1000L)
                 elapsedSeconds++
+            }
+        }
+    }
+
+    // Khi kết nối lại đồng hồ trong lúc đang tập, gửi lại lệnh SESSION_START
+    LaunchedEffect(isWatchConnected) {
+        if (hasStarted && !repState.isFinished && isWatchConnected) {
+            withContext(Dispatchers.IO) {
+                try {
+                    val nodeClient = Wearable.getNodeClient(context)
+                    val messageClient = Wearable.getMessageClient(context)
+                    val nodes = com.google.android.gms.tasks.Tasks.await(nodeClient.connectedNodes)
+                    val targetNode = nodes.firstOrNull { it.isNearby } ?: nodes.firstOrNull()
+                    targetNode?.let { node ->
+                        com.google.android.gms.tasks.Tasks.await(
+                            messageClient.sendMessage(node.id, TransportPaths.EXERCISE_SESSION, "START".toByteArray(Charsets.UTF_8))
+                        )
+                    }
+                } catch (e: Exception) {
+                    android.util.Log.w("ActiveExercise", "Failed to resync session to wear", e)
+                }
+            }
+        }
+    }
+
+    // Khi đang mất kết nối trong bài tập, chủ động ping kiểm tra mỗi 1.2s để nhận diện ngay khi Bluetooth vừa bật lại
+    LaunchedEffect(isWatchConnected) {
+        if (!isWatchConnected) {
+            while (isActive && !PhoneTransferState.isWatchConnected) {
+                PhoneTransferState.performPingPongCheck(context, timeoutMs = 1200L)
+                delay(1200L)
             }
         }
     }
@@ -280,7 +313,7 @@ fun ActiveExerciseScreen(
             }
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Surface(
-                    color = TealSoft,
+                    color = if (isWatchConnected) TealSoft else AmberSoft,
                     shape = RoundedCornerShape(50),
                 ) {
                     Row(
@@ -291,18 +324,19 @@ fun ActiveExerciseScreen(
                             modifier = Modifier
                                 .size(7.dp)
                                 .clip(CircleShape)
-                                .background(Teal),
+                                .background(if (isWatchConnected) Teal else Amber),
                         )
+                        Spacer(Modifier.width(4.dp))
                         Icon(
                             imageVector = Icons.Rounded.Watch,
                             contentDescription = null,
-                            tint = TealDark,
+                            tint = if (isWatchConnected) TealDark else Amber,
                             modifier = Modifier.size(13.dp),
                         )
                         Spacer(Modifier.width(4.dp))
                         Text(
-                            "Đã kết nối",
-                            color = TealDark,
+                            if (isWatchConnected) "Đã kết nối" else "Mất kết nối",
+                            color = if (isWatchConnected) TealDark else Amber,
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Bold,
                         )
@@ -396,7 +430,54 @@ fun ActiveExerciseScreen(
         Spacer(Modifier.height(12.dp))
 
         // SignalQualityBar live đo chất lượng cảm biến
-        SignalQualityBar(qualityPercent = repState.signalQualityPercent)
+        SignalQualityBar(qualityPercent = if (isWatchConnected) repState.signalQualityPercent else 0)
+
+        if (!isWatchConnected && hasStarted && !isFinished) {
+            Spacer(Modifier.height(10.dp))
+            Card(
+                shape = RoundedCornerShape(14.dp),
+                colors = CardDefaults.cardColors(containerColor = AmberSoft),
+                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(1.dp, Color(0xFFF59E0B).copy(alpha = 0.5f), RoundedCornerShape(14.dp)),
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(28.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFFFDE68A)),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Rounded.Warning,
+                            contentDescription = null,
+                            tint = Color(0xFFB45309),
+                            modifier = Modifier.size(16.dp),
+                        )
+                    }
+                    Spacer(Modifier.width(10.dp))
+                    Column {
+                        Text(
+                            "Mất kết nối với đồng hồ",
+                            color = Color(0xFF92400E),
+                            fontSize = 12.5.sp,
+                            fontWeight = FontWeight.Bold,
+                        )
+                        Text(
+                            "Tạm dừng bài tập · Đang tự động kết nối lại...",
+                            color = Color(0xFFB45309),
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Medium,
+                        )
+                    }
+                }
+            }
+        }
 
         Spacer(Modifier.height(24.dp))
 
@@ -1077,13 +1158,14 @@ private fun formatDuration(seconds: Int): String {
 
 @Composable
 private fun SignalQualityBar(qualityPercent: Int) {
+    val isDisconnected = qualityPercent <= 0
     Card(
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(containerColor = White),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         modifier = Modifier
             .fillMaxWidth()
-            .border(1.dp, SurfaceBorder, RoundedCornerShape(16.dp)),
+            .border(1.dp, if (isDisconnected) Color(0xFFFDE68A) else SurfaceBorder, RoundedCornerShape(16.dp)),
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp),
@@ -1092,7 +1174,7 @@ private fun SignalQualityBar(qualityPercent: Int) {
             Icon(
                 imageVector = Icons.Rounded.Sensors,
                 contentDescription = null,
-                tint = if (qualityPercent >= 80) TealDark else Amber,
+                tint = if (isDisconnected) Muted else if (qualityPercent >= 80) TealDark else Amber,
                 modifier = Modifier.size(20.dp),
             )
             Spacer(Modifier.width(8.dp))
@@ -1108,20 +1190,22 @@ private fun SignalQualityBar(qualityPercent: Int) {
                     .weight(1f)
                     .height(8.dp)
                     .clip(RoundedCornerShape(4.dp))
-                    .background(Canvas),
+                    .background(Color(0xFFF1F5F9)),
             ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .fillMaxWidth(fraction = (qualityPercent / 100f).coerceIn(0f, 1f))
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(if (qualityPercent >= 80) Teal else Amber),
-                )
+                if (!isDisconnected && qualityPercent > 0) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .fillMaxWidth(fraction = (qualityPercent / 100f).coerceIn(0f, 1f))
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(if (qualityPercent >= 80) Teal else Amber),
+                    )
+                }
             }
             Spacer(Modifier.width(8.dp))
             Text(
-                "$qualityPercent%",
-                color = if (qualityPercent >= 80) TealDark else Amber,
+                text = if (isDisconnected) "0%" else "$qualityPercent%",
+                color = if (isDisconnected) Muted else if (qualityPercent >= 80) TealDark else Amber,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
             )

@@ -79,8 +79,11 @@ import kotlinx.coroutines.isActive
 import vn.edu.ictu.steadysense.core.TransportPaths
 import vn.edu.ictu.steadysense.wear.research.WearResearchState
 import vn.edu.ictu.steadysense.wear.transport.WearAckService
+import vn.edu.ictu.steadysense.wear.transport.WearConnectionState
 import vn.edu.ictu.steadysense.wear.transport.WearExerciseAlertState
 import vn.edu.ictu.steadysense.wear.transport.WearSender
+
+import android.bluetooth.BluetoothAdapter
 
 class MainActivity : ComponentActivity() {
     private val batteryReceiver = object : BroadcastReceiver() {
@@ -91,12 +94,35 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private val bluetoothReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == BluetoothAdapter.ACTION_STATE_CHANGED && context != null) {
+                val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
+                if (state == BluetoothAdapter.STATE_OFF || state == BluetoothAdapter.STATE_TURNING_OFF) {
+                    WearConnectionState.setConnected(false)
+                } else if (state == BluetoothAdapter.STATE_ON) {
+                    Wearable.getNodeClient(context).connectedNodes
+                        .addOnSuccessListener { nodes ->
+                            WearConnectionState.updateFromNodes(nodes)
+                            if (WearConnectionState.isPhoneConnected) {
+                                WearSender.retryPending(context)
+                                WearAckService.sendWatchStatus(context)
+                            }
+                        }
+                }
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         WearAckService.sendWatchStatus(this)
         runCatching {
             registerReceiver(batteryReceiver, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+        }
+        runCatching {
+            registerReceiver(bluetoothReceiver, IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED))
         }
         setContent {
             WearTheme {
@@ -114,6 +140,9 @@ class MainActivity : ComponentActivity() {
         super.onDestroy()
         runCatching {
             unregisterReceiver(batteryReceiver)
+        }
+        runCatching {
+            unregisterReceiver(bluetoothReceiver)
         }
     }
 }
@@ -267,10 +296,10 @@ private fun WearApp() {
                     },
                 )
             } else if (isSessionActive) {
-                // Vòng cung tiến trình Teal quanh viền đồng hồ
+                // Vòng cung tiến trình Teal khi nối, Amber khi mất kết nối
                 Canvas(Modifier.fillMaxSize().padding(4.dp)) {
                     drawArc(
-                        color = Color(0xFF134E48),
+                        color = if (phoneConnected) Color(0xFF134E48) else Color(0xFF78350F),
                         startAngle = -90f,
                         sweepAngle = 360f,
                         useCenter = false,
@@ -280,23 +309,32 @@ private fun WearApp() {
 
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        "ĐANG TẬP",
-                        color = Teal,
+                        if (phoneConnected) "ĐANG TẬP" else "MẤT KẾT NỐI",
+                        color = if (phoneConnected) Teal else Amber,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.ExtraBold,
                         letterSpacing = 1.sp,
                     )
                     Spacer(Modifier.height(4.dp))
                     Text(
-                        "Gấp – duỗi tay",
-                        color = TextWhite,
+                        if (phoneConnected) "Gấp – duỗi tay" else "Tạm dừng bài tập",
+                        color = if (phoneConnected) TextWhite else Amber,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center,
                     )
                     Spacer(Modifier.height(4.dp))
 
-                    if (cueMessage != null) {
+                    if (!phoneConnected) {
+                        Text(
+                            "Đang chờ kết nối lại...\nHãy giữ nguyên vị trí",
+                            color = TextMuted,
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Medium,
+                            textAlign = TextAlign.Center,
+                            lineHeight = 15.sp,
+                        )
+                    } else if (cueMessage != null) {
                         // Hiện chỉ dẫn AI từ điện thoại
                         val cueColor = when {
                             cueMessage.contains("GẬP") -> Teal
@@ -388,13 +426,24 @@ private fun WearApp() {
 @Composable
 private fun rememberPhoneConnection(): Boolean {
     val context = LocalContext.current
-    var connected by remember { mutableStateOf(false) }
-    LaunchedEffect(context) {
-        Wearable.getNodeClient(context).connectedNodes
-            .addOnSuccessListener { nodes -> connected = nodes.isNotEmpty() }
-            .addOnFailureListener { connected = false }
+    LaunchedEffect(Unit) {
+        while (isActive) {
+            Wearable.getNodeClient(context).connectedNodes
+                .addOnSuccessListener { nodes ->
+                    val wasConnected = WearConnectionState.isPhoneConnected
+                    WearConnectionState.updateFromNodes(nodes)
+                    if (!wasConnected && WearConnectionState.isPhoneConnected) {
+                        WearSender.retryPending(context)
+                        WearAckService.sendWatchStatus(context)
+                    }
+                }
+                .addOnFailureListener {
+                    WearConnectionState.setConnected(false)
+                }
+            delay(1500L)
+        }
     }
-    return connected
+    return WearConnectionState.isPhoneConnected
 }
 
 @Composable
